@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+# CMake files
+**/*.vcxproj*
+**/*.sln
+**/*.sdf
+**/*.suo
+**/CMakeCache.txt
+**/CMakeFiles
+**/Win32
+**/Debug
+**/ipch
+**/.vscode
+**/*.cmake
+**/*.opensdf
