@@ -8,7 +8,7 @@ EventLoopThread::EventLoopThread(EventLoopPtr parentLooper, const std::string& n
 	:_parentLooper(parentLooper),
 	 _loop(boost::make_shared<EventLoop>(name + ":EventLoop")),
 	 _name(name),
-	 _isRunning(false) {
+	 _status(kNotInitialized) {
 
 }
 
@@ -16,44 +16,65 @@ EventLoopThread::~EventLoopThread() {
 	stop();
 }
 
-void EventLoopThread::start() {
+bool EventLoopThread::start() {
 	
-	_isRunning = true;
+	Status expiredStatus = kNotInitialized;
+	if (_status.compare_exchange_strong(expiredStatus, kStarting)) {
 
-	_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
+		_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
 
-	boost::lock_guard<boost::mutex> guard(_lock);
-	while (!_isRunning) {
-		_cond.wait(boost::unique_lock<boost::mutex>(_lock));
-	}
+		boost::lock_guard<boost::mutex> guard(_lock);
+		while (_status.load() != kStarted) {
+			_cond.wait(boost::unique_lock<boost::mutex>(_lock));
+		}
+
+		LOG4CPLUS_WARN(glog, "start event loop thread : " << _name << " success."
+			<< " current status : " << getStatusName()
+			<< " tid : " << getId());
+
+		return true;
+
+	} else {
+
+		LOG4CPLUS_WARN(glog, "start event loop thread : " << _name << " failed, current status : " << getStatusName());
+
+		return false;
+	}	
 }
 
-bool EventLoopThread::isRunning() {
-	return _isRunning;
-}
 
 bool EventLoopThread::isInThreadLoop() {
 	return _loop->isInLoopThread();
 }
 
-void EventLoopThread::stop(bool handlePendding)
+bool EventLoopThread::stop(bool handlePendding)
 {
-	if (!_isRunning) {
-		return ;
-	}
+	Status expiredStatus = kStarted;
+	if (_status.compare_exchange_strong(expiredStatus, kStarting)) {
+		_loop->stop(handlePendding);
 
-	_isRunning = false;
+		if (_thread->joinable()) {
+			_thread->join();
+		}
 
-	_loop->stop(handlePendding);
+		_status.store(kNotInitialized);
 
-	if (_thread->joinable()) {
-		_thread->join();
+		LOG4CPLUS_WARN(glog, "stop event loop thread : " << _name << " success."
+			<< " current status : " << getStatusName()
+			<< " tid : " << getId());
+
+		return true;
+	} else {
+
+		LOG4CPLUS_WARN(glog, "stop event loop thread : " << _name << " failed, current status : " << getStatusName());
+
+		return false;
 	}
 }
 
 void EventLoopThread::threadLoop()
 {
-	LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "thread begin, name = " 
+	LOG4CPLUS_TRACE(glog, "thread begin, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
 	{
@@ -63,13 +84,29 @@ void EventLoopThread::threadLoop()
 
 	_loop->loop();
 
-	LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "thread end, name = " 
+	LOG4CPLUS_TRACE(glog, "thread end, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
 }
 
 boost::thread::id EventLoopThread::getId() {
 	return _loop->get_id();
+}
+
+const char* EventLoopThread::getStatusName()
+{
+	switch (_status.load()) {
+	case kNotInitialized:
+		return "kNotInitialized";
+	case kStarting:
+		return "kStarting";
+	case kStarted:
+		return "kStarted";
+	case kStopping:
+		return "kStopping";
+	default:
+		return "invalid state";
+	}
 }
 
 }

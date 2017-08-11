@@ -8,15 +8,26 @@ namespace light {
 class EventLoopThread : public boost::noncopyable
 {
 public:
+	enum Status {
+		kNotInitialized,
+		kStarting,
+		kStarted,
+		kStopping
+	};
+
 	EventLoopThread(EventLoopPtr parentLoop, const std::string& name);
 
 	~EventLoopThread();
 
-	void start();
+	bool start();
 
-	void stop(bool handlePendding=true);
+	bool stop(bool handlePendding=true);
 
-	bool isRunning();
+	bool isRunning() {return _status.load() == kStarted;}
+
+	Status getStatus() {return _status.load();}
+
+	const char* getStatusName();
 
 	bool isInThreadLoop();
 
@@ -27,7 +38,7 @@ private:
 	void threadLoop();
 
 private:
-	bool _isRunning;
+	boost::atomic<Status> _status;
 	boost::mutex _lock;
 	boost::condition_variable _cond;
 	EventLoopPtr _parentLooper;

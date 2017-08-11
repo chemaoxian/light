@@ -29,11 +29,11 @@ namespace light {
 
 		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");
 		
-		LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "EventLoop " << _name << " Loop begin, tid = " << _tid);
+		LOG4CPLUS_TRACE(glog, "EventLoop " << _name << " Loop begin, tid = " << _tid);
 
 		int ret = event_base_loop(_eventBase, 0);
 
-		LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
+		LOG4CPLUS_TRACE(glog, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
 	}
 
 	void EventLoop::stop(bool handlePenddingEvent) {

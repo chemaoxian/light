@@ -6,7 +6,7 @@
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
 
-#define LOG4CPLUS_LOGGER (log4cplus::Logger::getRoot())
+#define glog (log4cplus::Logger::getRoot())
 
 
 #endif
