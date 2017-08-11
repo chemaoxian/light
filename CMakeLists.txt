@@ -17,6 +17,7 @@ endif()
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/include
+    ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.2.1-rc2/include
     ${CMAKE_SOURCE_DIR}/src
     )
 
@@ -25,7 +26,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     include_directories(
         ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/Win32-Code
         )
-    link_directories(${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/lib/win)
+    link_directories(
+        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/lib/win
+        ${CMAKE_SOURCE_DIR}/log4cplus-1.2.1-rc2/msvc10/Win32/bin.Debug
+        )
 elseif (CMAKE_SYSTEM_NAME MATCHES "linux")
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
     link_directories(

@@ -1,76 +1,112 @@
 #include <boost/assert.hpp>
+#include <boost/foreach.hpp>
 #include <event2/event.h>
 #include <light/event_loop.h>
 #include <light/exception.h>
-
+#include <light/log4cplus_forward.h>
+#include <light/timer.h>
 
 namespace light {
 
-    
-	event_loop::event_loop()
-		:_event_base(event_base_new()) {
+	EventLoop::EventLoop(const std::string& name)
+		:_eventBase(event_base_new()),
+		 _name(name) {
 		
-		if (_event_base == NULL) {
-			throw light_exception("init event base failed");
+		if (_eventBase == NULL) {
+			throw LightException("init event base failed");
 		}
 	}
 
-	event_loop::~event_loop()
-	{
-		if (_event_base != NULL) {
-			event_base_free(_event_base);
-			_event_base = NULL;
+	EventLoop::~EventLoop() {
+		if (_eventBase != NULL) {
+			event_base_free(_eventBase);
+			_eventBase = NULL;
 		}
 	}
 
-	void event_loop::loop()
-	{
-		BOOST_ASSERT_MSG(_event_base != NULL, "call event_loop::loop() with NULL event base");
+	void EventLoop::loop() {
+		_tid = boost::this_thread::get_id();
 
-		event_base_loop(_event_base, 0);
+		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");
+		
+		LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "EventLoop " << _name << " Loop begin, tid = " << _tid);
+
+		int ret = event_base_loop(_eventBase, 0);
+
+		LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
 	}
 
-	void event_loop::quit()
-	{
-		BOOST_ASSERT_MSG(_event_base != NULL, "call event_loop::quit() with NULL event base");
+	void EventLoop::stop(bool handlePenddingEvent) {
 
-		event_base_loopbreak(_event_base);
+		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::stop() with NULL event base");
+
+		if (handlePenddingEvent) {
+			event_base_loopexit(_eventBase, 0);
+		} else {
+			event_base_loopbreak(_eventBase);
+		}
 	}
 
-	void event_loop::run(const Callback& callback)
-	{
-		BOOST_ASSERT_MSG(_event_base != NULL, "event base == NULL");
+	bool EventLoop::isRuning() {
+		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::quit() with NULL event base");
 
+		return event_base_got_break(_eventBase) != 0 ||
+			event_base_got_exit(_eventBase);
 	}
 
-	light::TimerId event_loop::run_at(const Callback& callback)
-	{
-
+	void EventLoop::runInLoop(const Handler& handler) {
+		if (isInLoopThread()) {
+			handler();
+		} else {
+			runInQueue(handler);
+		}
 	}
 
-	light::TimerId event_loop::run_after(const Callback& callback)
-	{
+	void EventLoop::runInQueue(const Handler& handler) {
+		boost::lock_guard<boost::mutex> _(_pendingLock);
+		_pendingHandles.push_back(handler);
 
+		event_base_once(_eventBase, -1, EV_TIMEOUT, &EventLoop::notifyCallback, this, NULL);
 	}
 
-	light::TimerId event_loop::run_every(const Callback& callback)
-	{
+	TimerPtr EventLoop::runAfter(const Duration& interval, const Handler& handler) {
+		TimerPtr timerPtr = boost::make_shared<Timer>(shared_from_this());
+		if (timerPtr) {
+			timerPtr->start(interval, handler, false);
+		}
 
+		return timerPtr;
 	}
 
-	bool event_loop::is_pedding(TimerId id)
-	{
+	TimerPtr EventLoop::runEvery(const Duration& interval, const Handler& handler) {
+		TimerPtr timerPtr = boost::make_shared<Timer>(shared_from_this());
+		if (timerPtr) {
+			timerPtr->start(interval, handler, false);
+		}
 
+		return timerPtr;
 	}
 
-	void event_loop::cancel(TimerId id)
-	{
-
+	bool EventLoop::isInLoopThread() {
+		return boost::this_thread::get_id() == _tid;
 	}
 
-	event_base* event_loop::get_event_base()
+	void EventLoop::_doPenddingHandlers()
 	{
+		std::list<Handler> penddingHandlers;
+		
+		{
+			boost::lock_guard<boost::mutex> _(_pendingLock);
+			penddingHandlers.swap(_pendingHandles);
+		}
 
+		BOOST_FOREACH (const Handler& handler, penddingHandlers) {
+			handler();
+		}
 	}
 
+	void EventLoop::notifyCallback(evutil_socket_t fd, short what, void* that) {
+		EventLoop* looper = static_cast<EventLoop*>(that);
+		looper->_doPenddingHandlers();
+	}
 }

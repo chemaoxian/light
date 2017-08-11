@@ -1,48 +1,48 @@
-#ifndef _EVENT_LOOP_H_
-#define _EVENT_LOOP_H_
+#ifndef _LIGHT_EVENT_LOOP_H_
+#define _LIGHT_EVENT_LOOP_H_
 
-#include <boost/noncopyable.hpp>
-#include <boost/function.hpp>
-
-#include <event2/event.h>
-
+#include <light/forward.hpp>
+#include <light/duration.h>
 
 namespace light {
 
-typedef intptr_t TimerId;
+	class EventLoop : public boost::enable_shared_from_this<EventLoop>
+	{	
+	public:
+		EventLoop(const std::string& name);
 
-class event_loop : boost::noncopyable
-{
-public:
-	typedef boost::function<void()> Callback;
-	
-public:
-	event_loop();
-	
-	~event_loop();
+		~EventLoop();
 
-	void loop();
+		void loop();
 
-	void quit();
-	
-	void run(const Callback& callback);
+		void stop(bool handlePenddingEvent=false);
 
-	TimerId run_at(const Callback& callback);
-	
-	TimerId run_after(const Callback& callback);
-	
-	TimerId run_every(const Callback& callback);
+		bool isRuning();
 
-	bool is_pedding(TimerId id);
+		void runInLoop(const Handler& handler);
 
-	void cancel(TimerId id);
+		void runInQueue(const Handler& handler);
 
-	// internal use
-	event_base* get_event_base();
+		TimerPtr runAfter(const Duration& interval, const Handler& handler);
 
-private:
-	event_base* _event_base;
-};
+		TimerPtr runEvery(const Duration& interval, const Handler& handler);
+
+		bool isInLoopThread();
+
+		event_base* getEventBase() {return _eventBase;}
+
+		std::string getName() {return _name;}
+	private:
+		void _doPenddingHandlers();
+
+		static void notifyCallback(evutil_socket_t fd, short what, void* that);
+	private:
+		boost::thread::id _tid;
+		event_base* _eventBase;
+		boost::mutex _pendingLock;
+		std::list<Handler> _pendingHandles;
+		std::string _name;
+	};
 
 }
 

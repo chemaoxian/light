@@ -6,13 +6,13 @@
 
 namespace light {
 
-class light_exception : public std::runtime_error 
+class LightException : public std::runtime_error 
 {
 public:
-    light_exception(const std::string& what):std::runtime_error(what) {
+    LightException(const std::string& what):std::runtime_error(what) {
     }
 
-    ~light_exception() {
+    ~LightException() {
     }
 };
 
