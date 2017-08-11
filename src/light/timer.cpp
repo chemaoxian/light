@@ -23,7 +23,6 @@ Timer::~Timer() {
 bool Timer::start(const Duration& duration, const Handler& handler, bool repeat) {
 	event_add(_timerEvent, &(duration.TimeVal()));
 	_repeat.store(repeat);
-	_duration = duration;
 
 	return true;
 }
@@ -53,7 +52,8 @@ void Timer::_handleTimer()
 	_handler();
 
 	if (isReapt()) {
-		event_add(_timerEvent, &(_duration.TimeVal()));
+		struct timeval tv = getDuration().TimeVal();
+		event_add(_timerEvent, &tv);
 	}
 }
 

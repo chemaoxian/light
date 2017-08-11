@@ -32,6 +32,8 @@ namespace light {
 		event_base* getEventBase() {return _eventBase;}
 
 		std::string getName() {return _name;}
+
+		boost::thread::id get_id();
 	private:
 		void _doPenddingHandlers();
 

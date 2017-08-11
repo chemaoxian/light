@@ -4,12 +4,11 @@
 
 namespace light {
 
-
-
-EventLoopThread::EventLoopThread(const std::string& name)
-	: _name(name), 
-	_loop(boost::make_shared<EventLoop>(name + ":" + "EventLoop")),
-	_isStarted(false){
+EventLoopThread::EventLoopThread(EventLoopPtr parentLooper, const std::string& name)
+	:_parentLooper(parentLooper),
+	 _loop(boost::make_shared<EventLoop>(name + ":EventLoop")),
+	 _name(name),
+	 _isRunning(false) {
 
 }
 
@@ -17,36 +16,38 @@ EventLoopThread::~EventLoopThread() {
 	stop();
 }
 
-bool EventLoopThread::start() {
+void EventLoopThread::start() {
+	
+	_isRunning = true;
 
-	bool oldValue = false;
-	if (_isStarted.compare_exchange_strong(oldValue, true)) {
-		_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
-		_tid = _thread->get_id();
+	_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
+
+	boost::lock_guard<boost::mutex> guard(_lock);
+	while (!_isRunning) {
+		_cond.wait(boost::unique_lock<boost::mutex>(_lock));
 	}
-
-	return true;
 }
 
 bool EventLoopThread::isRunning() {
-	return _isStarted.load();
+	return _isRunning;
 }
 
 bool EventLoopThread::isInThreadLoop() {
-	if (!_isStarted.load()) {
-		return false;
-	}
-
-	return _tid == boost::this_thread::get_id();
+	return _loop->isInLoopThread();
 }
 
 void EventLoopThread::stop(bool handlePendding)
 {
-	bool oldValue = true;
-	if (_isStarted.compare_exchange_strong(oldValue, false)) {
-		_loop->stop(handlePendding);
+	if (!_isRunning) {
+		return ;
+	}
+
+	_isRunning = false;
+
+	_loop->stop(handlePendding);
+
+	if (_thread->joinable()) {
 		_thread->join();
-		_thread.reset();
 	}
 }
 
@@ -55,6 +56,10 @@ void EventLoopThread::threadLoop()
 	LOG4CPLUS_TRACE(LOG4CPLUS_LOGGER, "thread begin, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
+	{
+		boost::lock_guard<boost::mutex> guard(_lock);
+		_cond.notify_all();
+	}
 
 	_loop->loop();
 
@@ -64,11 +69,7 @@ void EventLoopThread::threadLoop()
 }
 
 boost::thread::id EventLoopThread::getId() {
-	if (!_isStarted.load()) {
-		return boost::thread::id();
-	}
-
-	return _tid;
+	return _loop->get_id();
 }
 
 }

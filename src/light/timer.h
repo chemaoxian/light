@@ -34,7 +34,6 @@ private:
 	EventLoopPtr _loop;
 	Handler	_handler;
 	boost::atomic_bool	_repeat;
-	Duration _duration;
 	struct event* _timerEvent;
 };
 

@@ -109,4 +109,10 @@ namespace light {
 		EventLoop* looper = static_cast<EventLoop*>(that);
 		looper->_doPenddingHandlers();
 	}
+
+	boost::thread::id EventLoop::get_id()
+	{
+		return _tid;
+	}
+
 }

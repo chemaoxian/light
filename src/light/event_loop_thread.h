@@ -8,11 +8,11 @@ namespace light {
 class EventLoopThread : public boost::noncopyable
 {
 public:
-	EventLoopThread(const std::string& name);
+	EventLoopThread(EventLoopPtr parentLoop, const std::string& name);
 
 	~EventLoopThread();
 
-	bool start();
+	void start();
 
 	void stop(bool handlePendding=true);
 
@@ -27,11 +27,13 @@ private:
 	void threadLoop();
 
 private:
+	bool _isRunning;
+	boost::mutex _lock;
+	boost::condition_variable _cond;
+	EventLoopPtr _parentLooper;
 	EventLoopPtr _loop;
 	std::string _name;
 	boost::scoped_ptr<boost::thread> _thread;
-	boost::atomic_bool _isStarted;
-	boost::thread::id _tid;
 };
 
 }
