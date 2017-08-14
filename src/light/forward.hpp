@@ -11,18 +11,36 @@
 #include <boost/atomic.hpp>
 
 #include <event2/event.h>
+#include <event2/bufferevent.h>
+#include <event2/listener.h>
+#include <event2/util.h>
+
+#include <light/buffer.h>
 
 namespace light {
 
-class Timer;
+class TimerEvent;
+
 class EventLoop;
 
-typedef boost::function<void()> Handler;
+class SignalEvent;
 
-typedef boost::shared_ptr<Timer> TimerPtr;
+class TcpConnection;
+
+typedef boost::shared_ptr<TimerEvent> TimerEventPtr;
+
+typedef boost::shared_ptr<SignalEvent> SignalEventPtr;
 
 typedef boost::shared_ptr<EventLoop> EventLoopPtr;
 
+typedef boost::shared_ptr<TcpConnection> TcpconnectionPtr;
+
+
+typedef boost::function<void()> Handler;
+
+typedef boost::function<void(TcpconnectionPtr, const Buffer&)> MessageHandler;
+
+typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 }
 
 #endif

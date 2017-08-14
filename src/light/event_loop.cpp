@@ -4,7 +4,7 @@
 #include <light/event_loop.h>
 #include <light/exception.h>
 #include <light/log4cplus_forward.h>
-#include <light/timer.h>
+#include <light/timer_event.h>
 
 namespace light {
 
@@ -45,6 +45,12 @@ namespace light {
 		} else {
 			event_base_loopbreak(_eventBase);
 		}
+
+		{
+			boost::lock_guard<boost::mutex> _(_pendingLock);
+			_pendingHandles.clear();
+		}
+		
 	}
 
 	bool EventLoop::isRuning() {
@@ -69,22 +75,12 @@ namespace light {
 		event_base_once(_eventBase, -1, EV_TIMEOUT, &EventLoop::notifyCallback, this, NULL);
 	}
 
-	TimerPtr EventLoop::runAfter(const Duration& interval, const Handler& handler) {
-		TimerPtr timerPtr = boost::make_shared<Timer>(shared_from_this());
-		if (timerPtr) {
-			timerPtr->start(interval, handler, false);
-		}
-
-		return timerPtr;
+	TimerEventPtr EventLoop::runAfter(const Duration& interval, const Handler& handler) {
+		return TimerEvent::create(shared_from_this(), interval, handler, false);
 	}
 
-	TimerPtr EventLoop::runEvery(const Duration& interval, const Handler& handler) {
-		TimerPtr timerPtr = boost::make_shared<Timer>(shared_from_this());
-		if (timerPtr) {
-			timerPtr->start(interval, handler, false);
-		}
-
-		return timerPtr;
+	TimerEventPtr EventLoop::runEvery(const Duration& interval, const Handler& handler) {
+		return TimerEvent::create(shared_from_this(), interval, handler, false);
 	}
 
 	bool EventLoop::isInLoopThread() {

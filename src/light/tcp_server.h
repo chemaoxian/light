@@ -9,11 +9,11 @@
 
 namespace light {
 
-class tcp_server : public boost::noncopyable {
+class TcpServer : public boost::noncopyable {
 public:
-    tcp_server();
+    TcpServer();
     
-	~tcp_server();
+	~TcpServer();
 
     bool start(const std::string& host, uint16_t port);
 };

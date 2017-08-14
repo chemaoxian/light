@@ -4,109 +4,78 @@
 
 namespace light {
 
-EventLoopThread::EventLoopThread(EventLoopPtr parentLooper, const std::string& name)
-	:_parentLooper(parentLooper),
-	 _loop(boost::make_shared<EventLoop>(name + ":EventLoop")),
-	 _name(name),
-	 _status(kNotInitialized) {
+EventLoopThread::EventLoopThread(const std::string& name)
+	:_started(false),
+	 _name(name){
 
 }
 
 EventLoopThread::~EventLoopThread() {
-	stop();
+	_stop();
 }
 
-bool EventLoopThread::start() {
-	
-	Status expiredStatus = kNotInitialized;
-	if (_status.compare_exchange_strong(expiredStatus, kStarting)) {
+EventLoopPtr EventLoopThread::start() {
 
-		_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
+	if (_started ) {
+		return _loop;
+	}
 
-		boost::lock_guard<boost::mutex> guard(_lock);
-		while (_status.load() != kStarted) {
-			_cond.wait(boost::unique_lock<boost::mutex>(_lock));
-		}
+	_started = true;
 
-		LOG4CPLUS_WARN(glog, "start event loop thread : " << _name << " success."
-			<< " current status : " << getStatusName()
-			<< " tid : " << getId());
+	_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
 
-		return true;
+	boost::lock_guard<boost::mutex> guard(_lock);
+	while (_loop.get() == NULL) {
+		_cond.wait(boost::unique_lock<boost::mutex>(_lock));
+	}
 
-	} else {
+	LOG4CPLUS_WARN(glog, "event loop thread : " << _name << " started."
+			<< " tid : " << _thread->get_id());
 
-		LOG4CPLUS_WARN(glog, "start event loop thread : " << _name << " failed, current status : " << getStatusName());
-
-		return false;
-	}	
+	return _loop;
 }
 
-
-bool EventLoopThread::isInThreadLoop() {
-	return _loop->isInLoopThread();
-}
-
-bool EventLoopThread::stop(bool handlePendding)
+void EventLoopThread::_stop()
 {
-	Status expiredStatus = kStarted;
-	if (_status.compare_exchange_strong(expiredStatus, kStarting)) {
-		_loop->stop(handlePendding);
+	if (_started) {
+		
+		{
+			boost::lock_guard<boost::mutex> guard(_lock);
+			while (_loop.get() == NULL) {
+				_cond.wait(boost::unique_lock<boost::mutex>(_lock));
+			}
+		}
+		
+		boost::thread::id tid = _loop->get_id();
 
-		if (_thread->joinable()) {
+		_loop->stop(true);
+
+		if (_thread && _thread->joinable()) {
 			_thread->join();
 		}
+		_loop.reset();
 
-		_status.store(kNotInitialized);
-
-		LOG4CPLUS_WARN(glog, "stop event loop thread : " << _name << " success."
-			<< " current status : " << getStatusName()
-			<< " tid : " << getId());
-
-		return true;
-	} else {
-
-		LOG4CPLUS_WARN(glog, "stop event loop thread : " << _name << " failed, current status : " << getStatusName());
-
-		return false;
+		LOG4CPLUS_WARN(glog, "event loop thread : " << _name << " stoped." << " tid : " << tid);
 	}
 }
 
 void EventLoopThread::threadLoop()
 {
-	LOG4CPLUS_TRACE(glog, "thread begin, name = " 
+	LOG4CPLUS_TRACE(glog, "event loop thread begin, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
+
 	{
 		boost::lock_guard<boost::mutex> guard(_lock);
+		_loop = boost::make_shared<EventLoop>(_name + ":EventLoop");
 		_cond.notify_all();
 	}
 
 	_loop->loop();
 
-	LOG4CPLUS_TRACE(glog, "thread end, name = " 
+	LOG4CPLUS_TRACE(glog, "event loop thread end, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
-}
-
-boost::thread::id EventLoopThread::getId() {
-	return _loop->get_id();
-}
-
-const char* EventLoopThread::getStatusName()
-{
-	switch (_status.load()) {
-	case kNotInitialized:
-		return "kNotInitialized";
-	case kStarting:
-		return "kStarting";
-	case kStarted:
-		return "kStarted";
-	case kStopping:
-		return "kStopping";
-	default:
-		return "invalid state";
-	}
 }
 
 }

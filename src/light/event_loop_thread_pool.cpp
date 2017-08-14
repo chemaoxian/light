@@ -1,42 +1,53 @@
 #include <light/event_loop_thread_pool.h>
+#include <light/log4cplus_forward.h>
 #include <algorithm>
 #include <boost/format.hpp>
 
 namespace light {
 
-EventLoopThreadPool::EventLoopThreadPool(EventLoopPtr& parentLoop, const std::string& name)
-	:_parentLoop(parentLoop), _name(name) {
+EventLoopThreadPool::EventLoopThreadPool(const std::string& name)
+	:_started(false),  
+     _nextLoopIndex(0),
+	 _name(name) {
 
 }
 
 EventLoopThreadPool::~EventLoopThreadPool() {
-	stop();
+	_stop();
 }
 
 void EventLoopThreadPool::start(uint32_t threadCount) {
+
+	LOG4CPLUS_ASSERT(glog,_started != false);
 	
+	_started = true;
+
 	threadCount = max(threadCount, 1);
 	for (size_t i=0; i<threadCount; i++) {
-		boost::scoped_ptr<EventLoopThread> threadPtr(new EventLoopThread(_parentLoop, 
-																		 (boost::format("%s:%d") % _name % (i+1)).str()));
+		boost::shared_ptr<EventLoopThread> threadPtr(new EventLoopThread((boost::format("%s:%d") % _name % (i+1)).str()));
 		threadPtr->start();
-
 		_threads.push_back(threadPtr);
 	}
 }
 
-void EventLoopThreadPool::stop() {
-	for (size_t i=0; i<_threads.size(); i++) {
-		_threads[i]->stop();
+void EventLoopThreadPool::_stop() {
+	if (_started) {
+		_threads.clear();
 	}
 }
 
 EventLoopPtr EventLoopThreadPool::getNextEventLoop() {
-	
+	uint32_t nextIndex = _nextLoopIndex.fetch_add(1);
+
+	uint32_t theadIndex = nextIndex % threadCount();
+
+	return getEventLoopByIndex(theadIndex);
 }
 
 EventLoopPtr EventLoopThreadPool::getEventLoopByIndex(uint32_t index) {
-
+	LOG4CPLUS_ASSERT(glog, index >= 0 && index < _threads.size());
+	
+	return _threads[index]->getEventLoop();
 }
 
 }

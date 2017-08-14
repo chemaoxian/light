@@ -23,9 +23,9 @@ namespace light {
 
 		void runInQueue(const Handler& handler);
 
-		TimerPtr runAfter(const Duration& interval, const Handler& handler);
+		TimerEventPtr runAfter(const Duration& interval, const Handler& handler);
 
-		TimerPtr runEvery(const Duration& interval, const Handler& handler);
+		TimerEventPtr runEvery(const Duration& interval, const Handler& handler);
 
 		bool isInLoopThread();
 

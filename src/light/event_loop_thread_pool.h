@@ -8,26 +8,40 @@ namespace light {
 
 class EventLoopThreadPool : boost::noncopyable {
 public:
-	EventLoopThreadPool(EventLoopPtr& parentLoop, const std::string& name);
+	enum Status {
+		kNotInitialized,
+		kStarting,
+		kStarted,
+		kStopping
+	};
+
+	EventLoopThreadPool(const std::string& name);
 
 	~EventLoopThreadPool();
 
+	// NOT thead safe
 	void start(uint32_t threadCount);
 
-	void stop();
+	bool isRunning() { return _started;}
 
 	EventLoopPtr getNextEventLoop();
 
 	EventLoopPtr getEventLoopByIndex(uint32_t index);
 
-	EventLoopPtr getParentEventLoop() {return _parentLoop;}
+	uint32_t	threadCount() {return (uint32_t)_threads.size();}
 
 	std::string	 getName() {return _name;}
+
 private:
-	boost::mutex _lock;
-	EventLoopPtr _parentLoop;
+	void _stop();
+
+private:
+	bool _started;
+	boost::atomic<uint32_t> _nextLoopIndex;
 	std::string _name;
-	std::vector<boost::scoped_ptr<EventLoopThread>> _threads;
+	std::vector<boost::shared_ptr<EventLoopThread> > _threads;
+
+
 };
 
 

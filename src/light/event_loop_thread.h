@@ -15,33 +15,26 @@ public:
 		kStopping
 	};
 
-	EventLoopThread(EventLoopPtr parentLoop, const std::string& name);
+	EventLoopThread(const std::string& name);
 
 	~EventLoopThread();
 
-	bool start();
+	// NOT thead safe
+	EventLoopPtr start();
 
-	bool stop(bool handlePendding=true);
-
-	bool isRunning() {return _status.load() == kStarted;}
-
-	Status getStatus() {return _status.load();}
-
-	const char* getStatusName();
-
-	bool isInThreadLoop();
+	bool isRunning() {return _started;}
 
 	EventLoopPtr getEventLoop() {return _loop;}
 
-	boost::thread::id getId();
 private:
 	void threadLoop();
 
+	// NOT thread safe
+	void _stop();
 private:
-	boost::atomic<Status> _status;
+	bool _started;
 	boost::mutex _lock;
 	boost::condition_variable _cond;
-	EventLoopPtr _parentLooper;
 	EventLoopPtr _loop;
 	std::string _name;
 	boost::scoped_ptr<boost::thread> _thread;
