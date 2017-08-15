@@ -10,18 +10,35 @@ class TcpConnection
 	: public boost::enable_shared_from_this<TcpConnection> {
 
 public:
+	enum Status {
+		kConnecting,
+		kConnected,
+		kDisconnecting,
+		kDisconnected
+	};
+
+	enum CloseMode {
+		kNone,
+		kCloseByPeer,
+		kCloseActive,
+		kCloseWithError
+	};
+public:
 	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer, const struct sockaddr& local);
 	
 	~TcpConnection();
 
-	// thead safe
+	//NOT thead safe
 	void setMessageHandler(const MessageHandler& handler);
 	
-	// thead safe
+	//NOT thead safe
 	void setConnectionHandler(const ConnectionHandler& handler);
 
-	// thread safe
+	//NOT thread safe
 	void setCloseHandler(const ConnectionHandler& handler);
+	
+	// NOT thread safe, call by TcpClient or TcpServer
+	bool start();
 
 	// thread safe
 	bool send(void* buffer, int len);
@@ -33,9 +50,6 @@ public:
 	bool send(const Buffer& buffer);
 	
 	// call in start thread loop
-	void shutdown();
-	
-	// call in start thread loop
 	void close();
 
 	// call in start thread loop
@@ -43,10 +57,18 @@ public:
 
 	EventLoopPtr getLooper() {return _looper;}
 
+	Status getStatus();
+
+	const char* getStatusString();
+
+	EventLoopPtr getEventLoop() {return _looper;}
+
+	CloseMode getCloseMode() {return _closeMode;}
 private:
 	void _handleRead();
 	void _handleWrite();
 	void _handleEvent(short what);
+	void _handleClose(CloseMode mode);
 
 	static void _readCallback(struct bufferevent *bev, void *ctx);
 	static void _writeCallabck(struct bufferevent *bev, void *ctx);
@@ -54,13 +76,14 @@ private:
 private:
 	EventLoopPtr _looper;
 	std::string _name;
-	evutil_socket_t _fd;
 	struct sockaddr _peer;
 	struct sockaddr _local;
 	struct bufferevent* _bufferEvent;
 	MessageHandler _msgHandler;
 	ConnectionHandler _connectionHandler;
 	ConnectionHandler _closeHandler;
+	boost::atomic<Status> _status;
+	CloseMode	_closeMode;
 	
 };
 

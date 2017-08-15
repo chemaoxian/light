@@ -38,7 +38,7 @@ typedef boost::shared_ptr<TcpConnection> TcpconnectionPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpconnectionPtr, const Buffer&)> MessageHandler;
+typedef boost::function<void(TcpconnectionPtr, evbuffer* input)> MessageHandler;
 
 typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 }

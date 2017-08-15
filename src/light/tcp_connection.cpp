@@ -1,16 +1,19 @@
 #include <light/tcp_connection.h>
 #include <light/event_loop.h>
+#include <light/log4cplus_forward.h>
 
 namespace light {
 
 	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer, const struct sockaddr& local)
 		:_looper(looper),
 		 _name(name),
-		 _fd(fd),
 		 _peer(peer),
 		 _local(local),
-		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), _fd, 
-											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS)) {
+		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd, 
+											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS)),
+		 _status(kConnecting),
+		 _closeMode(kNone) {
+
 		bufferevent_setcb(_bufferEvent, 
 			&TcpConnection::_readCallback, 
 			&TcpConnection::_writeCallabck,
@@ -23,25 +26,42 @@ namespace light {
 	}
 
 	void TcpConnection::setMessageHandler(const MessageHandler& handler) {
-		bufferevent_lock(_bufferEvent);
+		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
 		_msgHandler = handler;
-		bufferevent_unlock(_bufferEvent);
 	}
 
 	void TcpConnection::setConnectionHandler(const ConnectionHandler& handler) {
-		bufferevent_lock(_bufferEvent);
+		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
 		_connectionHandler = handler;
-		bufferevent_unlock(_bufferEvent);
 	}
 
 	void TcpConnection::setCloseHandler(const ConnectionHandler& handler) {
-		bufferevent_lock(_bufferEvent);
+		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
 		_closeHandler = handler;
-		bufferevent_unlock(_bufferEvent);
+	}
+
+	bool TcpConnection::start() {
+		
+		Status expectStatus = kConnecting;
+		if (_status.compare_exchange_strong(expectStatus, kConnected)) {
+			
+			int ret = bufferevent_enable(_bufferEvent, EV_READ|EV_WRITE);
+			if (ret != 0) {
+				LOG4CPLUS_ERROR(glog, "bufferevent_enable for " << _name << " ret " << ret);
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	bool TcpConnection::send(void* buffer, int len) {
-		return bufferevent_write(_bufferEvent, buffer, len) == 0;
+		if (getStatus() != kConnected) {
+			LOG4CPLUS_ERROR(glog, "send for " << _name << " failed, invalid status " << getStatus());
+			return false;
+		} else {
+			return bufferevent_write(_bufferEvent, buffer, len) == 0;
+		}
 	}
 
 	bool TcpConnection::send(const Slice& slice) {
@@ -52,16 +72,66 @@ namespace light {
 		return send(const_cast<char*>(buffer.data()), buffer.length());
 	}
 
-	void TcpConnection::shutdown() {
-		bufferevent_setfd(_bufferEvent, -1);
-		evutil_closesocket(_fd);
-	}
-
 	void TcpConnection::close() {
-
+		_looper->runInLoop(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
 	}
 
 	void TcpConnection::closeWithDuration(const Duration& d) {
+		_looper->runAfter(d, boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
+	}
+
+	void TcpConnection::_handleClose(CloseMode mode) {
+		evutil_socket_t connectFd = bufferevent_getfd(_bufferEvent);
+		if (connectFd == -1) {
+			return ;
+		} else {
+			bufferevent_setfd(_bufferEvent, -1);
+		}
+		
+		if (connectFd) {
+			evutil_closesocket(connectFd);
+
+			_closeMode = mode;
+
+			if (_connectionHandler) {
+				_looper->runInLoop(boost::bind(_connectionHandler, shared_from_this()));
+			}
+
+			if (_closeHandler) {
+				_looper->runInLoop(boost::bind(_closeHandler, shared_from_this()));
+			}
+		}
+	}
+
+	TcpConnection::Status TcpConnection::getStatus() {
+		return _status.load();
+	}
+
+	const char* TcpConnection::getStatusString() {
+		switch(_status.load()) {
+		case kConnecting:
+			return "kConnecting";
+		case kConnected:
+			return "kConnected";
+		case kDisconnecting:
+			return "kDisconnecting";
+		case kDisconnected:
+			return "kDisconnected";
+		default:
+			return "unkown state";
+		}
+	}
+
+	void TcpConnection::_handleRead() {
+		evbuffer* buffer = bufferevent_get_input(_bufferEvent);
+		
+	}
+
+	void TcpConnection::_handleWrite() {
+
+	}
+
+	void TcpConnection::_handleWrite(short what) {
 
 	}
 
