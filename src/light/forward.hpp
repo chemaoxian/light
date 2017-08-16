@@ -9,11 +9,14 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/thread.hpp>
 #include <boost/atomic.hpp>
+#include <boost/any.hpp>
+#include <boost/unordered_map.hpp>
 
 #include <event2/event.h>
 #include <event2/bufferevent.h>
 #include <event2/listener.h>
 #include <event2/util.h>
+#include <event2/buffer.h>
 
 #include <light/buffer.h>
 
@@ -27,6 +30,10 @@ class SignalEvent;
 
 class TcpConnection;
 
+class EventLoopThread;
+
+class EventLoopThreadPool;
+
 typedef boost::shared_ptr<TimerEvent> TimerEventPtr;
 
 typedef boost::shared_ptr<SignalEvent> SignalEventPtr;
@@ -35,10 +42,11 @@ typedef boost::shared_ptr<EventLoop> EventLoopPtr;
 
 typedef boost::shared_ptr<TcpConnection> TcpconnectionPtr;
 
+typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpconnectionPtr, evbuffer* input)> MessageHandler;
+typedef boost::function<void(TcpconnectionPtr, Buffer&)> MessageHandler;
 
 typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 }

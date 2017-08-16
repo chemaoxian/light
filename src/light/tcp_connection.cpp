@@ -123,16 +123,25 @@ namespace light {
 	}
 
 	void TcpConnection::_handleRead() {
-		evbuffer* buffer = bufferevent_get_input(_bufferEvent);
-		
+		evbuffer* inputBuffer = bufferevent_get_input(_bufferEvent);
+		if (_msgHandler) {
+			_msgHandler(shared_from_this(), inputBuffer);
+		}
 	}
 
 	void TcpConnection::_handleWrite() {
-
+		// nothing todo noo
 	}
 
-	void TcpConnection::_handleWrite(short what) {
-
+	void TcpConnection::_handleEvent(short what) {
+		if (what | BEV_EVENT_EOF) {
+			_handleClose(kCloseByPeer);
+		} else if (what | BEV_EVENT_ERROR ||
+			       what | BEV_EVENT_TIMEOUT) {
+			_handleClose(kCloseWithError);
+		} else {
+			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
+		}
 	}
 
 }

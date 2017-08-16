@@ -23,22 +23,13 @@ public:
 		kCloseActive,
 		kCloseWithError
 	};
+
+	typedef boost::function<void(TcpconnectionPtr, evbuffer*)> MessageHandler;
+	typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 public:
 	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer, const struct sockaddr& local);
 	
 	~TcpConnection();
-
-	//NOT thead safe
-	void setMessageHandler(const MessageHandler& handler);
-	
-	//NOT thead safe
-	void setConnectionHandler(const ConnectionHandler& handler);
-
-	//NOT thread safe
-	void setCloseHandler(const ConnectionHandler& handler);
-	
-	// NOT thread safe, call by TcpClient or TcpServer
-	bool start();
 
 	// thread safe
 	bool send(void* buffer, int len);
@@ -64,6 +55,24 @@ public:
 	EventLoopPtr getEventLoop() {return _looper;}
 
 	CloseMode getCloseMode() {return _closeMode;}
+
+	boost::any& getContext() {return _context; }
+	
+	void setContext(const boost::any& context) {_context = context;}
+
+public: // NOT thread safe functions, for init the tcp connnection 
+	//NOT thead safe
+	void setMessageHandler(const MessageHandler& handler);
+
+	//NOT thead safe
+	void setConnectionHandler(const ConnectionHandler& handler);
+
+	//NOT thread safe
+	void setCloseHandler(const ConnectionHandler& handler);
+
+	// NOT thread safe, call by TcpClient or TcpServer
+	bool start();
+
 private:
 	void _handleRead();
 	void _handleWrite();
@@ -84,6 +93,7 @@ private:
 	ConnectionHandler _closeHandler;
 	boost::atomic<Status> _status;
 	CloseMode	_closeMode;
+	boost::any  _context;
 	
 };
 
