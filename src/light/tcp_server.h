@@ -14,11 +14,13 @@ public:
     
 	~TcpServer();
 
-	// NOT Thread safe call befor start
-	void setConnectionHandler(const ConnectionHandler& handler);
+	void setCodecHandler(const CodecHandler& handler) {_codecHandler = handler;}
 
 	// NOT Thread safe call befor start
-	void setMessageHandler(const MessageHandler& handler);
+	void setConnectionHandler(const ConnectionHandler& handler) {_connection_handler = handler;}
+
+	// NOT Thread safe call befor start
+	void setMessageHandler(const MessageHandler& handler) { _message_handler = handler;}
 
 	// Thread safe
     bool start(const std::string& host, uint16_t port, int threadCount);
@@ -34,6 +36,10 @@ private:
 	EventLoopPtr _loop;
 	EventLoopThreadPoolPtr _threadPool;
 	ConnectionMap _connections;
+
+	ConnectionHandler _connection_handler;
+	MessageHandler _message_handler;
+	CodecHandler _codecHandler;
 };
 
 

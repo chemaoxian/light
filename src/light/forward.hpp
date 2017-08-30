@@ -19,6 +19,7 @@
 #include <event2/buffer.h>
 
 #include <light/buffer.h>
+#include <light/codec.h>
 
 namespace light {
 
@@ -46,7 +47,7 @@ typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpconnectionPtr, Buffer&)> MessageHandler;
+typedef boost::function<void(TcpconnectionPtr, const Buffer&)> MessageHandler;
 
 typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 }

@@ -46,6 +46,7 @@ public:
 	// call in start thread loop
 	void closeWithDuration(const Duration& d);
 
+public:
 	EventLoopPtr getLooper() {return _looper;}
 
 	Status getStatus();
