@@ -2,18 +2,12 @@
 #define _LIGHT_CODEC_H_
 
 #include <light/forward.hpp>
-#include <boost/asio/detail/socket_ops.hpp>
+#include <boost/type_traits.hpp>
 
 namespace light {
-
-
-	enum CodecResult {
-		kSuccess,
-		kImcomplete,
-		kBadPacket
-	};
-
-	typedef boost::function<CodecResult(evbuffer*, Buffer*)> CodecHandler;
+	
+	typedef boost::shared_ptr<Buffer> BufferPtr;
+	typedef boost::function<BufferPtr(evbuffer*)> CodecHandler;
 
 	template <typename HeaderType>
 	class DefaultCodecHandler {
@@ -21,12 +15,12 @@ namespace light {
 		DefaultCodecHandler(){}
 		~DefaultCodecHandler(){}
 
-		CodecResult operator () (evbuffer* input_buffer, Buffer* out_message) const {
+		 BufferPtr operator () (evbuffer* input_buffer) const {
 			BOOST_STATIC_ASSERT(boost::is_integral<HeaderType>::value == true && sizeof(HeaderType) <= 4);
 
-			int input_len = evbuffer_get_length(input_buffer);
+			size_t input_len = evbuffer_get_length(input_buffer);
 			if (input_len < sizeof(HeaderType)) {
-				return kImcomplete;
+				return false;
 			}
 
 			HeaderType header_len;
@@ -37,15 +31,16 @@ namespace light {
 
 			if (input_len < host_header_len)
 			{
-				return kImcomplete;
+				return NULL;
 			}
 
-			out_message->EnsureWritableBytes(host_header_len);
+			BufferPtr buffer_ptr= boost::make_shared<Buffer>(host_header_len, 0);
+			buffer_ptr->EnsureWritableBytes(host_header_len);
 
-			ev_ssize_t remove_size = evbuffer_remove(input_buffer, out_message->WriteBegin(), host_header_len);
+			ev_ssize_t remove_size = evbuffer_remove(input_buffer, buffer_ptr->WriteBegin(), host_header_len);
 			BOOST_ASSERT(remove_size == host_header_len);
 
-			return kSuccess;
+			return buffer_ptr;
 		}
 	};
 

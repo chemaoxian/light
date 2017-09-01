@@ -7,7 +7,7 @@
 #include <algorithm>
 
 #include <event2/util.h>
-#include "light/slice.h"
+#include <light/slice.h>
 
 
 namespace light {

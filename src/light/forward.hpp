@@ -1,5 +1,5 @@
-#ifndef _LIGHT_FORWARD_DECLEAR_
-#define _LIGHT_FORWARD_DECLEAR_
+#ifndef _LIGHT_FORWARD_H_
+#define _LIGHT_FORWARD_H_
 
 #include <stdint.h>
 
@@ -35,6 +35,8 @@ class EventLoopThread;
 
 class EventLoopThreadPool;
 
+typedef boost::shared_ptr<Buffer> BufferPtr;
+
 typedef boost::shared_ptr<TimerEvent> TimerEventPtr;
 
 typedef boost::shared_ptr<SignalEvent> SignalEventPtr;
@@ -47,9 +49,10 @@ typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpconnectionPtr, const Buffer&)> MessageHandler;
+typedef boost::function<void(TcpconnectionPtr, const BufferPtr&)> MessageHandler;
 
 typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
+
 }
 
 #endif

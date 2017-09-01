@@ -24,10 +24,8 @@ public:
 		kCloseWithError
 	};
 
-	typedef boost::function<void(TcpconnectionPtr, evbuffer*)> MessageHandler;
-	typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
 public:
-	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer, const struct sockaddr& local);
+	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);
 	
 	~TcpConnection();
 
@@ -61,6 +59,7 @@ public:
 	
 	void setContext(const boost::any& context) {_context = context;}
 
+	std::string getName() {return _name;}
 public: // NOT thread safe functions, for init the tcp connnection 
 	//NOT thead safe
 	void setMessageHandler(const MessageHandler& handler);
@@ -70,6 +69,8 @@ public: // NOT thread safe functions, for init the tcp connnection
 
 	//NOT thread safe
 	void setCloseHandler(const ConnectionHandler& handler);
+
+	void stMessageCodec(const CodecHandler& handler) {_codec_hander = handler;}
 
 	// NOT thread safe, call by TcpClient or TcpServer
 	bool start();
@@ -87,11 +88,11 @@ private:
 	EventLoopPtr _looper;
 	std::string _name;
 	struct sockaddr _peer;
-	struct sockaddr _local;
 	struct bufferevent* _bufferEvent;
 	MessageHandler _msgHandler;
 	ConnectionHandler _connectionHandler;
 	ConnectionHandler _closeHandler;
+	CodecHandler _codec_hander;
 	boost::atomic<Status> _status;
 	CloseMode	_closeMode;
 	boost::any  _context;

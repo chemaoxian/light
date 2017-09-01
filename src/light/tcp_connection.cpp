@@ -4,11 +4,10 @@
 
 namespace light {
 
-	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer, const struct sockaddr& local)
+	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer)
 		:_looper(looper),
 		 _name(name),
 		 _peer(peer),
-		 _local(local),
 		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd, 
 											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS)),
 		 _status(kConnecting),
@@ -50,6 +49,8 @@ namespace light {
 				LOG4CPLUS_ERROR(glog, "bufferevent_enable for " << _name << " ret " << ret);
 				return false;
 			}
+
+			_looper->runInLoop(boost::bind(_connectionHandler, shared_from_this()));
 		}
 
 		return true;
@@ -125,7 +126,15 @@ namespace light {
 	void TcpConnection::_handleRead() {
 		evbuffer* inputBuffer = bufferevent_get_input(_bufferEvent);
 		if (_msgHandler) {
-			_msgHandler(shared_from_this(), inputBuffer);
+			BufferPtr buffer_ptr;
+			while (true) {
+				buffer_ptr = _codec_hander(inputBuffer);
+
+				if (buffer_ptr)
+				{
+					_msgHandler(shared_from_this(), buffer_ptr);
+				}
+			}
 		}
 	}
 
