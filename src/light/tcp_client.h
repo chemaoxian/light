@@ -11,15 +11,16 @@ namespace light {
 
 		~TcpClient();
 
+		// NOT Thread safe call before start
 		void setCodecHandler(const CodecHandler& handler) {_codecHandler = handler;}
 
-		// NOT Thread safe call befor start
+		// NOT Thread safe call before start
 		void setConnectionHandler(const ConnectionHandler& handler) {_connectionHandler = handler;}
 
-		// NOT Thread safe call befor start
+		// NOT Thread safe call before start
 		void setMessageHandler(const MessageHandler& handler) { _messageHandler = handler;}
 
-		bool start(const std::string& host, bool auto_connect = true, const Duration& connect_duration);
+		bool start(const std::string& host, const Duration& connect_duration, bool auto_connect = true);
 
 		EventLoopPtr getEventLooper() { return _loop; }
 

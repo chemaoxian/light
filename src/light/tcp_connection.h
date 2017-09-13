@@ -27,6 +27,8 @@ public:
 public:
 	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);
 	
+	TcpConnection(EventLoopPtr looper, std::string& name, bufferevent* buffer, const struct sockaddr& peer);
+
 	~TcpConnection();
 
 	// thread safe
@@ -44,6 +46,7 @@ public:
 	// call in start thread loop
 	void closeWithDuration(const Duration& d);
 
+	
 public:
 	EventLoopPtr getLooper() {return _looper;}
 
@@ -72,7 +75,7 @@ public: // NOT thread safe functions, for init the tcp connnection
 
 	void stMessageCodec(const CodecHandler& handler) {_codec_hander = handler;}
 
-	// NOT thread safe, call by TcpClient or TcpServer
+	// Thread Safe, call by TcpClient or TcpServer
 	bool start();
 
 private:

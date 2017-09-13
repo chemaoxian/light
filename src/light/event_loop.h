@@ -2,7 +2,6 @@
 #define _LIGHT_EVENT_LOOP_H_
 
 #include <light/forward.hpp>
-#include <light/duration.h>
 
 namespace light {
 

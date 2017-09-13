@@ -9,7 +9,7 @@ namespace light {
 		 _name(name),
 		 _peer(peer),
 		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd, 
-											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE | BEV_OPT_DEFER_CALLBACKS)),
+											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE)),
 		 _status(kConnecting),
 		 _closeMode(kNone) {
 
@@ -18,6 +18,21 @@ namespace light {
 			&TcpConnection::_writeCallabck,
 			&TcpConnection::_eventCallback,
 			this);
+	}
+
+	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, bufferevent* buffer, const struct sockaddr& peer)
+		:_looper(looper),
+		_name(name),
+		_peer(peer),
+		_bufferEvent(buffer),
+		_status(kConnecting),
+		_closeMode(kNone) {
+
+			bufferevent_setcb(_bufferEvent, 
+				&TcpConnection::_readCallback, 
+				&TcpConnection::_writeCallabck,
+				&TcpConnection::_eventCallback,
+				this);
 	}
 
 	TcpConnection::~TcpConnection() {
@@ -151,6 +166,24 @@ namespace light {
 		} else {
 			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
 		}
+	}
+
+	void TcpConnection::_readCallback(struct bufferevent *bev, void *ctx)
+	{
+		TcpConnection* connection_ptr = static_cast<TcpConnection*>(ctx);
+		connection_ptr->_handleRead();
+	}
+
+	void TcpConnection::_writeCallabck(struct bufferevent *bev, void *ctx)
+	{
+		TcpConnection* connection_ptr = static_cast<TcpConnection*>(ctx);
+		connection_ptr->_handleWrite();
+	}
+
+	void TcpConnection::_eventCallback(struct bufferevent *bev, short what, void *ctx)
+	{
+		TcpConnection* connection_ptr = static_cast<TcpConnection*>(ctx);
+		connection_ptr->_handleEvent(what);
 	}
 
 }

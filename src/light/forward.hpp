@@ -2,6 +2,7 @@
 #define _LIGHT_FORWARD_H_
 
 #include <stdint.h>
+#include <string>
 
 #include <boost/function.hpp>
 #include <boost/smart_ptr.hpp>
@@ -17,9 +18,11 @@
 #include <event2/listener.h>
 #include <event2/util.h>
 #include <event2/buffer.h>
+#include <event2/dns.h>
 
 #include <light/buffer.h>
 #include <light/codec.h>
+#include <light/duration.h>
 
 namespace light {
 

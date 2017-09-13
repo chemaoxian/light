@@ -1,102 +1,78 @@
-#include <light/tcp_server.h>
-#include <light/log4cplus_forward.h>
+#include <light/tcp_connector.h>
 #include <light/event_loop.h>
-#include <light/event_loop_thread_pool.h>
-#include <light/tcp_connection.h>
+#include <light/log4cplus_forward.h>
 
 namespace light {
     
-	TcpServer::TcpServer(EventLoopPtr& loop, const std::string& name)
-		:_is_running(false),
-		 _listener(loop, name + ":" + "TcpListener"),
-		 _loop(loop),
-		 _threadPool(boost::make_shared<EventLoopThreadPool>(name + ":EventLoopThreadPool")),
-		 _max_connection(0),
+
+	TcpConnector::TcpConnector(EventLoopPtr& loop, const std::string& name)
+		:_loop(loop),
 		 _name(name),
-		 _next_connection_id(0)
-	{
-		_connection_handler = boost::bind(&TcpServer::_default_connection_handler, this, _1);
-		_message_handler = boost::bind(&TcpServer::_default_message_handler, this, _1, _2);
-		_codecHandler = DefaultCodecHandler<uint16_t>();
+		 _is_running(false),
+		 _bufferEvent(NULL){
 
-		_listener.setNewConnectionHandler(boost::bind(&TcpServer::_new_connection_handler, this, _1, _2, _3));
-		_listener.setErrorHandler(boost::bind(&TcpServer::_listener_error_handler, this));
 	}
 
-	TcpServer::~TcpServer()
-	{
+	TcpConnector::~TcpConnector() {
+
+	}
+
 	
-	}
+	bool TcpConnector::start(const std::string& host, bool auto_connect) {
 
-	bool TcpServer::start(const std::string& host, int threadCount, int max_connection/*=50000*/)
-	{
-		BOOST_ASSERT(threadCount >= 0);
-		BOOST_ASSERT(max_connection > 0);
+		sockaddr addr = {0};
+		int addr_size = 0;
+		if (evutil_parse_sockaddr_port(host.c_str(), &addr, &addr_size) < 0)
+		{
+			return false;
+		}
 
 		bool expect = false;
 		if (_is_running.compare_exchange_strong(expect, true)) {
 			
-			if (!_listener.start(host)) {
+			_bufferEvent = bufferevent_socket_new(_loop->getEventBase(), -1, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE);
+			if (_bufferEvent == NULL) {
+				_is_running.store(false);
 				return false;
 			}
 
-			_max_connection = max_connection;
+			bufferevent_setcb(_bufferEvent, 
+				NULL, 
+				NULL,
+				&TcpConnector::_eventCallback,
+				this);
 
-			_threadPool->start(threadCount);
-		}
+			_addr = addr;
+			_addrSize = addr_size;
+		}	
 
 		return true;
 	}
 
-	void TcpServer::_default_connection_handler(TcpconnectionPtr& conn)
-	{
-
-	}
-
-	void TcpServer::_default_message_handler(TcpconnectionPtr& buffer, const BufferPtr&)
-	{
-
-	}
-
-	void TcpServer::_new_connection_handler(evutil_socket_t s, struct sockaddr* addr, int socklen)
-	{
-		if (_max_connection >= _connections.size())
-		{
-			evutil_closesocket(s);
-		}
-		else
-		{
-			EventLoopPtr next_looper = _threadPool->getNextEventLoop();
-			uint32_t conn_id = _next_connection_id ++;
-			std::string conn_name = _name + ":" + boost::to_string(conn_id);
-			TcpconnectionPtr new_conn = boost::make_shared<TcpConnection>(next_looper,conn_name, s, *addr);
-
-			if (!new_conn->start())
-			{
-				return ;
-			}
-
-			new_conn->setMessageHandler(_message_handler);
-			new_conn->setConnectionHandler(_connection_handler);
-			new_conn->setCloseHandler(boost::bind(&TcpServer::_close_connection_handler, this, _1));
-
-			_connections.insert(ConnectionMap::value_type(conn_name, new_conn));
+	void TcpConnector::stop() {
+		bool expect = true;
+		if (_is_running.compare_exchange_strong(expect, false)) {
+			bufferevent_setcb(_bufferEvent, NULL, NULL, NULL, this);
+			bufferevent_free(_bufferEvent);
 		}
 	}
 
-	void TcpServer::_listener_error_handler()
+	void TcpConnector::_eventCallback(struct bufferevent *bev, short what, void *ctx)
 	{
-
+		TcpConnector* connctorPtr = static_cast<TcpConnector*>(ctx);
+		connctorPtr->_handleEventCallabck(what);
 	}
 
-	void TcpServer::_close_connection_handler(TcpconnectionPtr& conn)
+	void TcpConnector::_handleEventCallabck(short what)
 	{
-		_loop->runInQueue(boost::bind(&TcpServer::_close_connection_handler_in_loop, this, conn));
-	}
-
-	void TcpServer::_close_connection_handler_in_loop(TcpconnectionPtr& conn)
-	{
-		_connections.erase(conn->getName());
+		if (what | BEV_EVENT_ERROR || what | BEV_EVENT_TIMEOUT) {
+			_error_handler();
+		} else if (what | BEV_EVENT_CONNECTED) {
+			
+			//_connection_handler();
+		} else {
+			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
+		}
 	}
 
 }
