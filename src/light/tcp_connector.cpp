@@ -1,6 +1,7 @@
 #include <light/tcp_connector.h>
 #include <light/event_loop.h>
 #include <light/log4cplus_forward.h>
+#include <light/tcp_connection.h>
 
 namespace light {
     
@@ -8,17 +9,19 @@ namespace light {
 	TcpConnector::TcpConnector(EventLoopPtr& loop, const std::string& name)
 		:_loop(loop),
 		 _name(name),
-		 _is_running(false),
+		 _is_runing(false),
 		 _bufferEvent(NULL){
 
 	}
 
 	TcpConnector::~TcpConnector() {
-
+		stop();
 	}
 
 	
-	bool TcpConnector::start(const std::string& host, bool auto_connect) {
+	bool TcpConnector::start(const std::string& host) {
+
+		BOOST_ASSERT(_loop->isInLoopThread());
 
 		sockaddr addr = {0};
 		int addr_size = 0;
@@ -27,12 +30,11 @@ namespace light {
 			return false;
 		}
 
-		bool expect = false;
-		if (_is_running.compare_exchange_strong(expect, true)) {
-			
+		if (!_is_runing) {
+		
 			_bufferEvent = bufferevent_socket_new(_loop->getEventBase(), -1, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE);
 			if (_bufferEvent == NULL) {
-				_is_running.store(false);
+				_is_runing = false;
 				return false;
 			}
 
@@ -50,11 +52,21 @@ namespace light {
 	}
 
 	void TcpConnector::stop() {
-		bool expect = true;
-		if (_is_running.compare_exchange_strong(expect, false)) {
+
+		BOOST_ASSERT(_loop->isInLoopThread());
+
+		if (!_is_runing) {
+			return ;
+		}
+
+		_is_runing = false;
+
+		if (_bufferEvent != NULL) {
 			bufferevent_setcb(_bufferEvent, NULL, NULL, NULL, this);
 			bufferevent_free(_bufferEvent);
-		}
+
+			_bufferEvent = NULL;
+		}	
 	}
 
 	void TcpConnector::_eventCallback(struct bufferevent *bev, short what, void *ctx)
@@ -66,13 +78,52 @@ namespace light {
 	void TcpConnector::_handleEventCallabck(short what)
 	{
 		if (what | BEV_EVENT_ERROR || what | BEV_EVENT_TIMEOUT) {
+
 			_error_handler();
+
 		} else if (what | BEV_EVENT_CONNECTED) {
 			
-			//_connection_handler();
+			evutil_socket_t sock = bufferevent_getfd(_bufferEvent);
+
+			std::string connection_name = _name;
+			connection_name.append(":");
+			connection_name.append(boost::to_string(sock));
+
+			TcpConnectionPtr connection = boost::make_shared<TcpConnection>(_loop, connection_name, _bufferEvent, _addr);
+
+			_connection_handler(connection);
 		} else {
 			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
 		}
+
+		stop();
+	}
+
+	bool TcpConnector::restart()
+	{
+		BOOST_ASSERT(_loop->isInLoopThread());
+
+		_is_runing = true;
+
+		if (_bufferEvent != NULL) {
+			bufferevent_setcb(_bufferEvent, NULL, NULL, NULL, this);
+			bufferevent_free(_bufferEvent);
+			_bufferEvent = NULL;
+		}
+		
+		_bufferEvent = bufferevent_socket_new(_loop->getEventBase(), -1, BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE);
+		if (_bufferEvent == NULL) {
+			_is_runing = false;
+			return false;
+		}
+
+		bufferevent_setcb(_bufferEvent, 
+			NULL, 
+			NULL,
+			&TcpConnector::_eventCallback,
+			this);
+
+		return true;
 	}
 
 }

@@ -4,11 +4,11 @@ project(light)
 
 set(Boost_USE_MULTITHREADED ON)
 
-find_package(Boost REQUIRED COMPONENTS
-    filesystem
-    system
-    thread
-    )
+find_package(Boost REQUIRED)
+
+set(Boost_USE_STATIC_LIBS  ON)         # only find static libs
+set(Boost_USE_MULTITHREADED  ON)
+set(Boost_USE_STATIC_RUNTIME  OFF)
 
 if(NOT Boost_FOUND)
     message("Boost not found")
@@ -20,6 +20,13 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.2.1-rc2/include
     ${CMAKE_SOURCE_DIR}/src
     )
+
+link_directories(
+    ${Boost_LI}
+)
+
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
@@ -40,6 +47,7 @@ else()
 endif()
 
 add_subdirectory(src/light)
+add_subdirectory(sample/echoserver)
 
 
 

@@ -48,12 +48,12 @@ namespace light {
 		return true;
 	}
 
-	void TcpServer::_default_connection_handler(TcpconnectionPtr& conn)
+	void TcpServer::_default_connection_handler(TcpConnectionPtr& conn)
 	{
 
 	}
 
-	void TcpServer::_default_message_handler(TcpconnectionPtr& buffer, const BufferPtr&)
+	void TcpServer::_default_message_handler(TcpConnectionPtr& buffer, const BufferPtr&)
 	{
 
 	}
@@ -69,16 +69,16 @@ namespace light {
 			EventLoopPtr next_looper = _threadPool->getNextEventLoop();
 			uint32_t conn_id = _next_connection_id ++;
 			std::string conn_name = _name + ":" + boost::to_string(conn_id);
-			TcpconnectionPtr new_conn = boost::make_shared<TcpConnection>(next_looper,conn_name, s, *addr);
+			TcpConnectionPtr new_conn = boost::make_shared<TcpConnection>(next_looper,conn_name, s, *addr);
+
+			new_conn->setMessageHandler(_message_handler);
+			new_conn->setConnectionHandler(_connection_handler);
+			new_conn->setCloseHandler(boost::bind(&TcpServer::_close_connection_handler, this, _1));
 
 			if (!new_conn->start())
 			{
 				return ;
 			}
-
-			new_conn->setMessageHandler(_message_handler);
-			new_conn->setConnectionHandler(_connection_handler);
-			new_conn->setCloseHandler(boost::bind(&TcpServer::_close_connection_handler, this, _1));
 
 			_connections.insert(ConnectionMap::value_type(conn_name, new_conn));
 		}
@@ -89,12 +89,12 @@ namespace light {
 
 	}
 
-	void TcpServer::_close_connection_handler(TcpconnectionPtr& conn)
+	void TcpServer::_close_connection_handler(TcpConnectionPtr& conn)
 	{
 		_loop->runInQueue(boost::bind(&TcpServer::_close_connection_handler_in_loop, this, conn));
 	}
 
-	void TcpServer::_close_connection_handler_in_loop(TcpconnectionPtr& conn)
+	void TcpServer::_close_connection_handler_in_loop(TcpConnectionPtr& conn)
 	{
 		_connections.erase(conn->getName());
 	}

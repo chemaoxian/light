@@ -5,7 +5,9 @@
 
 namespace light {
 
-	class TcpClient : public boost::noncopyable {
+	class TcpConnector;
+
+	class TcpClient : public boost::enable_shared_from_this<TcpClient> {
 	public:
 		TcpClient(EventLoopPtr& loop, const std::string& name = "");
 
@@ -20,15 +22,34 @@ namespace light {
 		// NOT Thread safe call before start
 		void setMessageHandler(const MessageHandler& handler) { _messageHandler = handler;}
 
+		// start and stop can not call in concurrence
 		bool start(const std::string& host, const Duration& connect_duration, bool auto_connect = true);
+
+		void stop();
 
 		EventLoopPtr getEventLooper() { return _loop; }
 
+		bool isRunning() {return _runing.load();}
 	private:
+		void handleNewConnection(TcpConnectionPtr conn);
+		void handleCloseConnection(TcpConnectionPtr conn);
+		void handleConnectError();
+
+		void startInLoop(const std::string& host, const Duration& connect_duration, bool auto_connect);
+		void stopInLoop();
+		void restartInLoop();
+	private:
+		boost::atomic<bool> _runing;
 		EventLoopPtr _loop;
 		CodecHandler _codecHandler;
 		ConnectionHandler _connectionHandler;
 		MessageHandler _messageHandler;
+		boost::scoped_ptr<TcpConnector> _connector;
+		bool _autoConnector;
+		Duration _connectInterval;
+		boost::mutex _connectionLock;
+		TimerEventPtr	_timerPtr;
+		TcpConnectionPtr _connection;
 	};
 
 

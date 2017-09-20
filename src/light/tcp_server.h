@@ -31,15 +31,15 @@ public:
 	EventLoopThreadPoolPtr getEventLoopThreadPool(){return _threadPool;}
 
 private:
-	typedef boost::unordered_map<std::string, TcpconnectionPtr> ConnectionMap;
+	typedef boost::unordered_map<std::string, TcpConnectionPtr> ConnectionMap;
 	
 private:
 	void _new_connection_handler(evutil_socket_t , struct sockaddr* , int socklen);
-	void _close_connection_handler(TcpconnectionPtr& conn);
-	void _close_connection_handler_in_loop(TcpconnectionPtr& conn);
+	void _close_connection_handler(TcpConnectionPtr& conn);
+	void _close_connection_handler_in_loop(TcpConnectionPtr& conn);
 	void _listener_error_handler();
-	void _default_connection_handler(TcpconnectionPtr& conn);
-	void _default_message_handler(TcpconnectionPtr& buffer, const BufferPtr&);
+	void _default_connection_handler(TcpConnectionPtr& conn);
+	void _default_message_handler(TcpConnectionPtr& buffer, const BufferPtr&);
 
 private:
 	boost::atomic<bool> _is_running;

@@ -46,15 +46,15 @@ typedef boost::shared_ptr<SignalEvent> SignalEventPtr;
 
 typedef boost::shared_ptr<EventLoop> EventLoopPtr;
 
-typedef boost::shared_ptr<TcpConnection> TcpconnectionPtr;
+typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;
 
 typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpconnectionPtr, const BufferPtr&)> MessageHandler;
+typedef boost::function<void(TcpConnectionPtr, const BufferPtr&)> MessageHandler;
 
-typedef boost::function<void(TcpconnectionPtr)> ConnectionHandler;
+typedef boost::function<void(TcpConnectionPtr)> ConnectionHandler;
 
 }
 

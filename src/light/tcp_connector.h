@@ -20,18 +20,21 @@ public:
 	// Thread safe
 	EventLoopPtr getEventLooper() { return _loop; }
 
-	// Thread safe
-	bool start(const std::string& host, bool auto_connect);
+	// NO Thread safe
+	bool start(const std::string& host);
 
-	// Thread safe
+	// NO Thread safe
 	void stop();
+
+	// NOT thread safe
+	bool restart();
 	
 private:
 	static void _eventCallback(struct bufferevent *bev, short what, void *ctx);
 
 	void _handleEventCallabck(short what);
 private:
-	boost::atomic<bool> _is_running;
+	bool _is_runing;
 	EventLoopPtr _loop;
 	std::string	_name;
 	ConnectionHandler _connection_handler;

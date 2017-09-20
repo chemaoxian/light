@@ -4,7 +4,7 @@
 
 namespace light {
 
-	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer)
+	TcpConnection::TcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const struct sockaddr& peer)
 		:_looper(looper),
 		 _name(name),
 		 _peer(peer),
@@ -20,7 +20,7 @@ namespace light {
 			this);
 	}
 
-	TcpConnection::TcpConnection(EventLoopPtr looper, std::string& name, bufferevent* buffer, const struct sockaddr& peer)
+	TcpConnection::TcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const struct sockaddr& peer)
 		:_looper(looper),
 		_name(name),
 		_peer(peer),
@@ -65,6 +65,8 @@ namespace light {
 				return false;
 			}
 
+			_status.store(kConnected);
+
 			_looper->runInLoop(boost::bind(_connectionHandler, shared_from_this()));
 		}
 
@@ -89,7 +91,11 @@ namespace light {
 	}
 
 	void TcpConnection::close() {
-		_looper->runInLoop(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
+		if (getStatus() != kDisconnected && getStatus() != kConnecting) {
+
+			_status.store(kDisconnecting);
+			_looper->runInLoop(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
+		}
 	}
 
 	void TcpConnection::closeWithDuration(const Duration& d) {
@@ -98,6 +104,7 @@ namespace light {
 
 	void TcpConnection::_handleClose(CloseMode mode) {
 		evutil_socket_t connectFd = bufferevent_getfd(_bufferEvent);
+		
 		if (connectFd == -1) {
 			return ;
 		} else {
@@ -106,6 +113,8 @@ namespace light {
 		
 		if (connectFd) {
 			evutil_closesocket(connectFd);
+
+			_status.store(kDisconnected);
 
 			_closeMode = mode;
 

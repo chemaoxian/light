@@ -25,9 +25,9 @@ public:
 	};
 
 public:
-	TcpConnection(EventLoopPtr looper, std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);
+	TcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);
 	
-	TcpConnection(EventLoopPtr looper, std::string& name, bufferevent* buffer, const struct sockaddr& peer);
+	TcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const struct sockaddr& peer);
 
 	~TcpConnection();
 
@@ -63,7 +63,8 @@ public:
 	void setContext(const boost::any& context) {_context = context;}
 
 	std::string getName() {return _name;}
-public: // NOT thread safe functions, for init the tcp connnection 
+
+public: // internal use, NOT thread safe functions, for init the tcp connnection 
 	//NOT thead safe
 	void setMessageHandler(const MessageHandler& handler);
 
