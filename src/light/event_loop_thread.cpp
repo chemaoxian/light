@@ -24,9 +24,9 @@ EventLoopPtr EventLoopThread::start() {
 
 	_thread.reset(new boost::thread(boost::bind(&EventLoopThread::threadLoop, this)));
 
-	boost::lock_guard<boost::mutex> guard(_lock);
+	boost::unique_lock<boost::mutex> lock(_lock);
 	while (_loop.get() == NULL) {
-		_cond.wait(boost::unique_lock<boost::mutex>(_lock));
+		_cond.wait(lock);
 	}
 
 	LOG4CPLUS_WARN(glog, "event loop thread : " << _name << " started."
@@ -40,9 +40,9 @@ void EventLoopThread::_stop()
 	if (_started) {
 		
 		{
-			boost::lock_guard<boost::mutex> guard(_lock);
+			boost::unique_lock<boost::mutex> guard(_lock);
 			while (_loop.get() == NULL) {
-				_cond.wait(boost::unique_lock<boost::mutex>(_lock));
+				_cond.wait(guard);
 			}
 		}
 		
@@ -66,7 +66,7 @@ void EventLoopThread::threadLoop()
 		<< boost::this_thread::get_id());
 
 	{
-		boost::lock_guard<boost::mutex> guard(_lock);
+		boost::unique_lock<boost::mutex> guard(_lock);
 		_loop = boost::make_shared<EventLoop>(_name + ":EventLoop");
 		_cond.notify_all();
 	}

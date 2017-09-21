@@ -1,5 +1,5 @@
-#ifndef _LIGHT_DURATION_H_
-#define _LIGHT_DURATION_H_
+#ifndef _LIGHT_DURATION_IMPLT_H_
+#define _LIGHT_DURATION_IMPLT_H_
 
 #include <event2/event.h>
 

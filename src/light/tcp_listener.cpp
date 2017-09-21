@@ -27,7 +27,7 @@ bool TcpListener::start(const std::string& listenAddr) {
 
 	_started = true;
 	sockaddr addr = {0};
-	int addrLen = sizeof(addrLen);
+	int addrLen = sizeof(sockaddr);
 	int ret = evutil_parse_sockaddr_port(listenAddr.c_str(), &addr, &addrLen);
 	if (ret != 0) {
 		LOG4CPLUS_ERROR(glog, "failed to listen addr " << listenAddr

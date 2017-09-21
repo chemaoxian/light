@@ -20,9 +20,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.2.1-rc2/include
     ${CMAKE_SOURCE_DIR}/src
     )
-
+  
 link_directories(
-    ${Boost_LI}
+    ${Boost_LIBRARY_DIRS}
 )
 
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
@@ -35,7 +35,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         )
     link_directories(
         ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/lib/win
-        ${CMAKE_SOURCE_DIR}/log4cplus-1.2.1-rc2/msvc10/Win32/bin.Debug
+        ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.2.1-rc2/msvc10/Win32/bin.Debug
         )
 elseif (CMAKE_SYSTEM_NAME MATCHES "linux")
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")

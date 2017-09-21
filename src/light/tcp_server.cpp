@@ -60,7 +60,7 @@ namespace light {
 
 	void TcpServer::_new_connection_handler(evutil_socket_t s, struct sockaddr* addr, int socklen)
 	{
-		if (_max_connection >= _connections.size())
+		if (_max_connection <= _connections.size())
 		{
 			evutil_closesocket(s);
 		}
