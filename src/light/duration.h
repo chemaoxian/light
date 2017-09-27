@@ -11,7 +11,7 @@ namespace light {
 
 class Duration {
 public:
-	static const int64_t Duration::kNanosecond = 1LL;
+	static const int64_t Duration::kNanosecond = 1ll;
 	static const int64_t Duration::kMicrosecond = 1000 * kNanosecond;
 	static const int64_t Duration::kMillisecond = 1000 * kMicrosecond;
 	static const int64_t Duration::kSecond = 1000 * kMillisecond;
