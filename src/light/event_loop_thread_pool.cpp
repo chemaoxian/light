@@ -6,7 +6,7 @@
 namespace light {
 
 EventLoopThreadPool::EventLoopThreadPool(const std::string& name)
-	:_started(false),  
+	:_started(false),
      _nextLoopIndex(0),
 	 _name(name) {
 
@@ -18,11 +18,11 @@ EventLoopThreadPool::~EventLoopThreadPool() {
 
 void EventLoopThreadPool::start(uint32_t threadCount) {
 
-	LOG4CPLUS_ASSERT(light_logger, _started == false);
-	
+	BOOST_ASSERT( _started == false);
+
 	_started = true;
 
-	threadCount = max(threadCount, 1);
+	threadCount = std::max(threadCount, 1);
 	for (size_t i=0; i<threadCount; i++) {
 		boost::shared_ptr<EventLoopThread> threadPtr(new EventLoopThread((boost::format("%s:%d") % _name % (i+1)).str()));
 		threadPtr->start();
@@ -45,8 +45,8 @@ EventLoopPtr EventLoopThreadPool::getNextEventLoop() {
 }
 
 EventLoopPtr EventLoopThreadPool::getEventLoopByIndex(uint32_t index) {
-	LOG4CPLUS_ASSERT(light_logger, index >= 0 && index < _threads.size());
-	
+	BOOST_ASSERT(index >= 0 && index < _threads.size());
+
 	return _threads[index]->getEventLoop();
 }
 

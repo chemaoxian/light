@@ -5,7 +5,7 @@
 #include <boost/type_traits.hpp>
 
 namespace light {
-	
+
 	typedef boost::shared_ptr<Buffer> BufferPtr;
 	typedef boost::function<BufferPtr(evbuffer*)> CodecHandler;
 
@@ -20,7 +20,7 @@ namespace light {
 
 			size_t input_len = evbuffer_get_length(input_buffer);
 			if (input_len < sizeof(HeaderType)) {
-				return false;
+				return boost::shared_ptr<Buffer>();
 			}
 
 			HeaderType header_len;
@@ -31,7 +31,7 @@ namespace light {
 
 			if (input_len < host_header_len)
 			{
-				return NULL;
+				return boost::shared_ptr<Buffer>();
 			}
 
 			BufferPtr buffer_ptr= boost::make_shared<Buffer>(host_header_len, 0);
@@ -53,7 +53,7 @@ namespace light {
 			size_t readLen = 0;
 			const char* readLine = evbuffer_readln(input_buffer, &readLen, EVBUFFER_EOL_CRLF);
 			if (readLine == NULL) {
-				return NULL;
+				return boost::shared_ptr<Buffer>((Buffer*)NULL);
 			}
 
 			BufferPtr buffer_ptr= boost::make_shared<Buffer>(readLen + 1, 0);

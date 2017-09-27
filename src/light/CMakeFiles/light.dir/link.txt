@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/liblight.a  CMakeFiles/light.dir/tcp_connection.cpp.o CMakeFiles/light.dir/tcp_server.cpp.o CMakeFiles/light.dir/event_loop_thread_pool.cpp.o CMakeFiles/light.dir/tcp_connector.cpp.o CMakeFiles/light.dir/tcp_listener.cpp.o CMakeFiles/light.dir/event_loop_thread.cpp.o CMakeFiles/light.dir/signal_event.cpp.o CMakeFiles/light.dir/tcp_client.cpp.o CMakeFiles/light.dir/event_loop.cpp.o CMakeFiles/light.dir/timer_event.cpp.o CMakeFiles/light.dir/codec.cpp.o CMakeFiles/light.dir/buffer.cc.o
+/usr/bin/ranlib ../../lib/liblight.a

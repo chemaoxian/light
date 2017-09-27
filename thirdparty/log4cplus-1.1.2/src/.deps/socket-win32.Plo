@@ -1,0 +1,9 @@
+socket-win32.lo: socket-win32.cxx ../include/log4cplus/config.hxx \
+ ../include/log4cplus/config/defines.hxx \
+ ../include/log4cplus/helpers/thread-config.h
+
+../include/log4cplus/config.hxx:
+
+../include/log4cplus/config/defines.hxx:
+
+../include/log4cplus/helpers/thread-config.h:

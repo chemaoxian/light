@@ -8,13 +8,13 @@ namespace light {
 		:_looper(looper),
 		 _name(name),
 		 _peer(peer),
-		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd, 
+		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd,
 											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE)),
 		 _status(kConnecting),
 		 _closeMode(kNone) {
 
-		bufferevent_setcb(_bufferEvent, 
-			&TcpConnection::_readCallback, 
+		bufferevent_setcb(_bufferEvent,
+			&TcpConnection::_readCallback,
 			&TcpConnection::_writeCallabck,
 			&TcpConnection::_eventCallback,
 			this);
@@ -28,8 +28,8 @@ namespace light {
 		_status(kConnecting),
 		_closeMode(kNone) {
 
-			bufferevent_setcb(_bufferEvent, 
-				&TcpConnection::_readCallback, 
+			bufferevent_setcb(_bufferEvent,
+				&TcpConnection::_readCallback,
 				&TcpConnection::_writeCallabck,
 				&TcpConnection::_eventCallback,
 				this);
@@ -40,25 +40,25 @@ namespace light {
 	}
 
 	void TcpConnection::setMessageHandler(const MessageHandler& handler) {
-		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
+		BOOST_ASSERT(getStatus() == kConnecting);
 		_msgHandler = handler;
 	}
 
 	void TcpConnection::setConnectionHandler(const ConnectionHandler& handler) {
-		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
+		BOOST_ASSERT(getStatus() == kConnecting);
 		_connectionHandler = handler;
 	}
 
 	void TcpConnection::setCloseHandler(const ConnectionHandler& handler) {
-		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
+		BOOST_ASSERT(getStatus() == kConnecting);
 		_closeHandler = handler;
 	}
 
 	bool TcpConnection::start() {
-		
+
 		Status expectStatus = kConnecting;
 		if (_status.compare_exchange_strong(expectStatus, kConnected)) {
-			
+
 			int ret = bufferevent_enable(_bufferEvent, EV_READ|EV_WRITE);
 			if (ret != 0) {
 				LOG4CPLUS_ERROR(light_logger, "bufferevent_enable for " << _name << " ret " << ret);
@@ -104,13 +104,13 @@ namespace light {
 
 	void TcpConnection::_handleClose(CloseMode mode) {
 		evutil_socket_t connectFd = bufferevent_getfd(_bufferEvent);
-		
+
 		if (connectFd == -1) {
 			return ;
 		} else {
 			bufferevent_setfd(_bufferEvent, -1);
 		}
-		
+
 		if (connectFd) {
 			evutil_closesocket(connectFd);
 
@@ -156,7 +156,8 @@ namespace light {
 
 				if (buffer_ptr)
 				{
-					_msgHandler(shared_from_this(), buffer_ptr);
+                    TcpConnectionPtr connPtr = shared_from_this();
+					_msgHandler(connPtr, buffer_ptr);
 				}
 				else
 				{

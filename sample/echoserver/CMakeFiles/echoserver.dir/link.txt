@@ -1,0 +1,1 @@
+/usr/bin/c++       CMakeFiles/echoserver.dir/main.cpp.o  -o ../../bin/echoserver  -L/usr/local/lib -rdynamic -llibevent -llibevent_core ../../lib/liblight.a -llog4cplusD.lib -llibevent -llibevent_core -llibevent_extras.lib -lws2_32.lib -llog4cplusD.lib -Wl,-rpath,/usr/local/lib 

@@ -1,0 +1,9 @@
+win32consoleappender.lo: win32consoleappender.cxx \
+ ../include/log4cplus/config.hxx ../include/log4cplus/config/defines.hxx \
+ ../include/log4cplus/helpers/thread-config.h
+
+../include/log4cplus/config.hxx:
+
+../include/log4cplus/config/defines.hxx:
+
+../include/log4cplus/helpers/thread-config.h:

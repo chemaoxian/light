@@ -1,0 +1,3 @@
+/home/shiwei/light/light/sample/echoclient/CMakeFiles/echoclient.dir
+/home/shiwei/light/light/sample/echoserver/CMakeFiles/echoserver.dir
+/home/shiwei/light/light/src/light/CMakeFiles/light.dir
