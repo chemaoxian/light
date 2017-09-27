@@ -3,17 +3,19 @@
 #include <light/tcp_connection.h>
 #include <light/event_loop.h>
 #include <light/timer_event.h>
+#include <light/log4cplus_forward.h>
 
 namespace light {
 
 	TcpClient::TcpClient(EventLoopPtr& loop, const std::string& name /*= ""*/)
 		:_runing(false),
+		 _loop(loop),
 		 _autoConnector(false),
 		 _connector(new TcpConnector(_loop, name)),
 		 _connectInterval(0)
 	{
-		_connector->setNewConnectionHandler(boost::bind(&TcpClient::handleNewConnection, shared_from_this(), _1));
-		_connector->setErrorHandler(boost::bind(&TcpClient::handleConnectError, shared_from_this()));
+		_connector->setNewConnectionHandler(boost::bind(&TcpClient::handleNewConnection, this, _1));
+		_connector->setErrorHandler(boost::bind(&TcpClient::handleConnectError, this));
 	}
 
 	TcpClient::~TcpClient()
@@ -26,7 +28,7 @@ namespace light {
 		bool expect = false;
 		if (_runing.compare_exchange_strong(expect, true)) {
 
-			_loop->runInLoop(boost::bind(&TcpClient::startInLoop, shared_from_this(), host, connect_duration, auto_connect));
+			_loop->runInLoop(boost::bind(&TcpClient::startInLoop, this, host, connect_duration, auto_connect));
 
 			return true;
 
@@ -41,7 +43,7 @@ namespace light {
 		conn->setMessageHandler(_messageHandler);
 		conn->setConnectionHandler(_connectionHandler);
 		conn->setCloseHandler(boost::bind(&TcpClient::handleCloseConnection, this, _1));
-		conn->stMessageCodec(_codecHandler);
+		conn->setCodecHandler(_codecHandler);
 
 		{
 			boost::lock_guard<boost::mutex> lock(_connectionLock);
@@ -56,6 +58,7 @@ namespace light {
 
 	void TcpClient::handleConnectError()
 	{
+		LOG4CPLUS_WARN(light_logger, "connect to failed");
 		TimerEventPtr timer = _loop->runAfter(_connectInterval, boost::bind(&TcpClient::restartInLoop, this));
 
 		{
@@ -133,6 +136,12 @@ namespace light {
 
 
 		_connector->stop();
+	}
+
+	light::TcpConnectionPtr TcpClient::getConnection()
+	{
+		boost::lock_guard<boost::mutex> lock(_connectionLock);
+		return _connection;
 	}
 
 }

@@ -17,7 +17,7 @@ namespace light {
 	{
 		_connection_handler = boost::bind(&TcpServer::_default_connection_handler, this, _1);
 		_message_handler = boost::bind(&TcpServer::_default_message_handler, this, _1, _2);
-		_codecHandler = DefaultCodecHandler<uint16_t>();
+		_codecHandler = DefaultPacketCodecHandler<uint16_t>();
 
 		_listener.setNewConnectionHandler(boost::bind(&TcpServer::_new_connection_handler, this, _1, _2, _3));
 		_listener.setErrorHandler(boost::bind(&TcpServer::_listener_error_handler, this));
@@ -73,6 +73,7 @@ namespace light {
 
 			new_conn->setMessageHandler(_message_handler);
 			new_conn->setConnectionHandler(_connection_handler);
+			new_conn->setCodecHandler(_codecHandler);
 			new_conn->setCloseHandler(boost::bind(&TcpServer::_close_connection_handler, this, _1));
 
 			if (!new_conn->start())

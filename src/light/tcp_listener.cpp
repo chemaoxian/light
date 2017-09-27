@@ -23,14 +23,14 @@ TcpListener::~TcpListener() {
 
 bool TcpListener::start(const std::string& listenAddr) {
 
-	LOG4CPLUS_ASSERT(glog, _started == FALSE);
+	LOG4CPLUS_ASSERT(light_logger, _started == FALSE);
 
 	_started = true;
 	sockaddr addr = {0};
 	int addrLen = sizeof(sockaddr);
 	int ret = evutil_parse_sockaddr_port(listenAddr.c_str(), &addr, &addrLen);
 	if (ret != 0) {
-		LOG4CPLUS_ERROR(glog, "failed to listen addr " << listenAddr
+		LOG4CPLUS_ERROR(light_logger, "failed to listen addr " << listenAddr
 			<< ", ret = " << ret);
 
 		_started = false;
@@ -70,7 +70,7 @@ void TcpListener::_handleRead(struct evconnlistener * l, evutil_socket_t fd, str
 
 void TcpListener::_handleError(struct evconnlistener *) {
 	
-	LOG4CPLUS_ERROR(glog, "TcpListener [" << _name <<  "] occur a errror");
+	LOG4CPLUS_ERROR(light_logger, "TcpListener [" << _name <<  "] occur a errror");
 	
 	if (_errorHandler) {
 		_errorHandler();

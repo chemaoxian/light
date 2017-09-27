@@ -56,14 +56,14 @@ bool TimerEvent::isReapt() {
 
 void TimerEvent::_handleTimer()
 {
-	_handler();
-
 	if (isReapt()) {
 		struct timeval tv = _interval.TimeVal();
 		event_add(_timerEvent, &tv);
 	} else {
 		cancel();
 	}
+
+	_handler();
 }
 
 Duration TimerEvent::getDuration()

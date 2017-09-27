@@ -10,10 +10,10 @@ namespace light {
 	typedef boost::function<BufferPtr(evbuffer*)> CodecHandler;
 
 	template <typename HeaderType>
-	class DefaultCodecHandler {
+	class DefaultPacketCodecHandler {
 	public:
-		DefaultCodecHandler(){}
-		~DefaultCodecHandler(){}
+		DefaultPacketCodecHandler(){}
+		~DefaultPacketCodecHandler(){}
 
 		 BufferPtr operator () (evbuffer* input_buffer) const {
 			BOOST_STATIC_ASSERT(boost::is_integral<HeaderType>::value == true && sizeof(HeaderType) <= 4);
@@ -44,6 +44,24 @@ namespace light {
 		}
 	};
 
+	class DefaultStringCoderHandler {
+	public:
+		DefaultStringCoderHandler(){}
+		~DefaultStringCoderHandler(){}
+
+		BufferPtr operator () (evbuffer* input_buffer) const {
+			size_t readLen = 0;
+			const char* readLine = evbuffer_readln(input_buffer, &readLen, EVBUFFER_EOL_CRLF);
+			if (readLine == NULL) {
+				return NULL;
+			}
+
+			BufferPtr buffer_ptr= boost::make_shared<Buffer>(readLen + 1, 0);
+			buffer_ptr->Write(readLine, readLen + 1);
+
+			return buffer_ptr;
+		}
+	};
 }
 
 

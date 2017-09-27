@@ -12,7 +12,7 @@ namespace light {
 
 		~EventLoop();
 
-		void loop();
+		void run();
 
 		void stop(bool handlePenddingEvent=false);
 
@@ -35,7 +35,7 @@ namespace light {
 		boost::thread::id get_id();
 	private:
 		void _doPenddingHandlers();
-
+		void _doIdle();
 		static void notifyCallback(evutil_socket_t fd, short what, void* that);
 	private:
 		boost::thread::id _tid;

@@ -29,7 +29,7 @@ EventLoopPtr EventLoopThread::start() {
 		_cond.wait(lock);
 	}
 
-	LOG4CPLUS_WARN(glog, "event loop thread : " << _name << " started."
+	LOG4CPLUS_WARN(light_logger, "event loop thread : " << _name << " started."
 			<< " tid : " << _thread->get_id());
 
 	return _loop;
@@ -55,13 +55,13 @@ void EventLoopThread::_stop()
 		}
 		_loop.reset();
 
-		LOG4CPLUS_WARN(glog, "event loop thread : " << _name << " stoped." << " tid : " << tid);
+		LOG4CPLUS_WARN(light_logger, "event loop thread : " << _name << " stoped." << " tid : " << tid);
 	}
 }
 
 void EventLoopThread::threadLoop()
 {
-	LOG4CPLUS_TRACE(glog, "event loop thread begin, name = " 
+	LOG4CPLUS_TRACE(light_logger, "event loop thread begin, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
 
@@ -71,9 +71,9 @@ void EventLoopThread::threadLoop()
 		_cond.notify_all();
 	}
 
-	_loop->loop();
+	_loop->run();
 
-	LOG4CPLUS_TRACE(glog, "event loop thread end, name = " 
+	LOG4CPLUS_TRACE(light_logger, "event loop thread end, name = " 
 		<< _name << " tid = " 
 		<< boost::this_thread::get_id());
 }

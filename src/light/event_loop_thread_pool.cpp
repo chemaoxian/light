@@ -18,7 +18,7 @@ EventLoopThreadPool::~EventLoopThreadPool() {
 
 void EventLoopThreadPool::start(uint32_t threadCount) {
 
-	LOG4CPLUS_ASSERT(glog,_started != false);
+	LOG4CPLUS_ASSERT(light_logger, _started == false);
 	
 	_started = true;
 
@@ -45,7 +45,7 @@ EventLoopPtr EventLoopThreadPool::getNextEventLoop() {
 }
 
 EventLoopPtr EventLoopThreadPool::getEventLoopByIndex(uint32_t index) {
-	LOG4CPLUS_ASSERT(glog, index >= 0 && index < _threads.size());
+	LOG4CPLUS_ASSERT(light_logger, index >= 0 && index < _threads.size());
 	
 	return _threads[index]->getEventLoop();
 }

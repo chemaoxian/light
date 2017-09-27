@@ -27,7 +27,7 @@ SignalEvent::SignalEvent(EventLoopPtr& eventLoop, int sig, bool repeat)
 	_event = event_new(_loop->getEventBase(), _sig, flags, &SignalEvent::_eventCallback, this);
 
 	if (_event == NULL) {
-		throw LightException("evtimer_new failed");
+		throw LightException("signal init failed");
 	}
 }
 
@@ -58,17 +58,18 @@ int SignalEvent::getSig() {
 
 
 void SignalEvent::_start(const Handler& handler) {
-	event_add(_event, NULL);
+	if (event_add(_event, NULL) < 0) {
+		throw LightException("signal event add failed");
+	}
+
 	_handler = handler;
 	_started.store(true);
 }
 
 void SignalEvent::_handlerEvent() {
+
 	_handler();
 
-	if (!_repeat) {
-		cancel();
-	}
 }
 
 void SignalEvent::_eventCallback(evutil_socket_t fd, short what, void* that) {

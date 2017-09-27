@@ -48,6 +48,7 @@ endif()
 
 add_subdirectory(src/light)
 add_subdirectory(sample/echoserver)
+add_subdirectory(sample/echoclient)
 
 
 

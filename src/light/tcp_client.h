@@ -30,6 +30,8 @@ namespace light {
 		EventLoopPtr getEventLooper() { return _loop; }
 
 		bool isRunning() {return _runing.load();}
+
+		TcpConnectionPtr getConnection();
 	private:
 		void handleNewConnection(TcpConnectionPtr conn);
 		void handleCloseConnection(TcpConnectionPtr conn);

@@ -74,7 +74,7 @@ public: // internal use, NOT thread safe functions, for init the tcp connnection
 	//NOT thread safe
 	void setCloseHandler(const ConnectionHandler& handler);
 
-	void stMessageCodec(const CodecHandler& handler) {_codec_hander = handler;}
+	void setCodecHandler(const CodecHandler& handler) {_codec_hander = handler;}
 
 	// Thread Safe, call by TcpClient or TcpServer
 	bool start();

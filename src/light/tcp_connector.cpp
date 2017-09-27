@@ -24,7 +24,7 @@ namespace light {
 		BOOST_ASSERT(_loop->isInLoopThread());
 
 		sockaddr addr = {0};
-		int addr_size = 0;
+		int addr_size = sizeof(addr);
 		if (evutil_parse_sockaddr_port(host.c_str(), &addr, &addr_size) < 0)
 		{
 			return false;
@@ -44,8 +44,16 @@ namespace light {
 				&TcpConnector::_eventCallback,
 				this);
 
+			if (bufferevent_socket_connect(_bufferEvent, &addr, addr_size) < 0) {
+				_is_runing = false;
+				bufferevent_free(_bufferEvent);
+				_bufferEvent = NULL;
+				return false;
+			}
+
 			_addr = addr;
 			_addrSize = addr_size;
+			_is_runing = true;
 		}	
 
 		return true;
@@ -77,11 +85,11 @@ namespace light {
 
 	void TcpConnector::_handleEventCallabck(short what)
 	{
-		if (what | BEV_EVENT_ERROR || what | BEV_EVENT_TIMEOUT) {
+		if (what & BEV_EVENT_ERROR || what & BEV_EVENT_TIMEOUT) {
 
 			_error_handler();
 
-		} else if (what | BEV_EVENT_CONNECTED) {
+		} else if (what & BEV_EVENT_CONNECTED) {
 			
 			evutil_socket_t sock = bufferevent_getfd(_bufferEvent);
 
@@ -92,8 +100,10 @@ namespace light {
 			TcpConnectionPtr connection = boost::make_shared<TcpConnection>(_loop, connection_name, _bufferEvent, _addr);
 
 			_connection_handler(connection);
+
+			_bufferEvent = NULL;
 		} else {
-			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
+			LOG4CPLUS_WARN(light_logger, "unhandled event : " << what << " name : " << _name);
 		}
 
 		stop();
@@ -122,6 +132,13 @@ namespace light {
 			NULL,
 			&TcpConnector::_eventCallback,
 			this);
+
+		if (bufferevent_socket_connect(_bufferEvent, &_addr, _addrSize) < 0) {
+			_is_runing = false;
+			bufferevent_free(_bufferEvent);
+			_bufferEvent = NULL;
+			return false;
+		}
 
 		return true;
 	}

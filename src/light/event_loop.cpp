@@ -5,6 +5,7 @@
 #include <light/exception.h>
 #include <light/log4cplus_forward.h>
 #include <light/timer_event.h>
+#include <event2/thread.h>
 
 namespace light {
 
@@ -12,6 +13,10 @@ namespace light {
 		:_eventBase(event_base_new()),
 		 _name(name) {
 		
+		if (evthread_make_base_notifiable(_eventBase) < 0) {
+			throw LightException("init event base failed");
+		}
+
 		if (_eventBase == NULL) {
 			throw LightException("init event base failed");
 		}
@@ -24,16 +29,18 @@ namespace light {
 		}
 	}
 
-	void EventLoop::loop() {
+	void EventLoop::run() {
 		_tid = boost::this_thread::get_id();
+	
+		runEvery(Duration(60.0), boost::bind(&EventLoop::_doIdle, this));
 
 		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");
-		
-		LOG4CPLUS_TRACE(glog, "EventLoop " << _name << " Loop begin, tid = " << _tid);
+
+		LOG4CPLUS_TRACE(light_logger, "EventLoop " << _name << " Loop begin, tid = " << _tid);
 
 		int ret = event_base_loop(_eventBase, 0);
 
-		LOG4CPLUS_TRACE(glog, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
+		LOG4CPLUS_TRACE(light_logger, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
 	}
 
 	void EventLoop::stop(bool handlePenddingEvent) {
@@ -72,7 +79,10 @@ namespace light {
 		boost::lock_guard<boost::mutex> _(_pendingLock);
 		_pendingHandles.push_back(handler);
 
-		event_base_once(_eventBase, -1, EV_TIMEOUT, &EventLoop::notifyCallback, this, NULL);
+		int ret = event_base_once(_eventBase, -1, EV_TIMEOUT, &EventLoop::notifyCallback, this, NULL);
+		if (ret < 0) {
+
+		}
 	}
 
 	TimerEventPtr EventLoop::runAfter(const Duration& interval, const Handler& handler) {
@@ -80,7 +90,7 @@ namespace light {
 	}
 
 	TimerEventPtr EventLoop::runEvery(const Duration& interval, const Handler& handler) {
-		return TimerEvent::create(shared_from_this(), interval, handler, false);
+		return TimerEvent::create(shared_from_this(), interval, handler, true);
 	}
 
 	bool EventLoop::isInLoopThread() {
@@ -109,6 +119,11 @@ namespace light {
 	boost::thread::id EventLoop::get_id()
 	{
 		return _tid;
+	}
+
+	void EventLoop::_doIdle()
+	{
+
 	}
 
 }

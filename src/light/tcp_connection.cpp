@@ -40,17 +40,17 @@ namespace light {
 	}
 
 	void TcpConnection::setMessageHandler(const MessageHandler& handler) {
-		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
+		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
 		_msgHandler = handler;
 	}
 
 	void TcpConnection::setConnectionHandler(const ConnectionHandler& handler) {
-		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
+		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
 		_connectionHandler = handler;
 	}
 
 	void TcpConnection::setCloseHandler(const ConnectionHandler& handler) {
-		LOG4CPLUS_ASSERT(glog, getStatus() == kConnecting);
+		LOG4CPLUS_ASSERT(light_logger, getStatus() == kConnecting);
 		_closeHandler = handler;
 	}
 
@@ -61,7 +61,7 @@ namespace light {
 			
 			int ret = bufferevent_enable(_bufferEvent, EV_READ|EV_WRITE);
 			if (ret != 0) {
-				LOG4CPLUS_ERROR(glog, "bufferevent_enable for " << _name << " ret " << ret);
+				LOG4CPLUS_ERROR(light_logger, "bufferevent_enable for " << _name << " ret " << ret);
 				return false;
 			}
 
@@ -75,7 +75,7 @@ namespace light {
 
 	bool TcpConnection::send(void* buffer, int len) {
 		if (getStatus() != kConnected) {
-			LOG4CPLUS_ERROR(glog, "send for " << _name << " failed, invalid status " << getStatus());
+			LOG4CPLUS_ERROR(light_logger, "send for " << _name << " failed, invalid status " << getStatus());
 			return false;
 		} else {
 			return bufferevent_write(_bufferEvent, buffer, len) == 0;
@@ -158,6 +158,10 @@ namespace light {
 				{
 					_msgHandler(shared_from_this(), buffer_ptr);
 				}
+				else
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -167,13 +171,13 @@ namespace light {
 	}
 
 	void TcpConnection::_handleEvent(short what) {
-		if (what | BEV_EVENT_EOF) {
+		if (what & BEV_EVENT_EOF) {
 			_handleClose(kCloseByPeer);
-		} else if (what | BEV_EVENT_ERROR ||
-			       what | BEV_EVENT_TIMEOUT) {
+		} else if (what & BEV_EVENT_ERROR ||
+			       what & BEV_EVENT_TIMEOUT) {
 			_handleClose(kCloseWithError);
 		} else {
-			LOG4CPLUS_WARN(glog, "unhandled event : " << what << " name : " << _name);
+			LOG4CPLUS_WARN(light_logger, "unhandled event : " << what << " name : " << _name);
 		}
 	}
 
