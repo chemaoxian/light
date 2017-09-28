@@ -45,3 +45,4 @@
 **/*.cmake
 **/*.opensdf
 **/*.cmake
+**/autom4te.cache*
