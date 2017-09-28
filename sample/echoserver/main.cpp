@@ -42,14 +42,13 @@ public:
 		return _server.start(host, ioPoolCount, 100000);
 	}
 
-    bool statics() {
+    void statics() {
 	    LOG4CPLUS_INFO(light::light_logger, "current count " << _count.load()
 				<< " current bytes : " << curent_size.load() / 1024.0f  / 1024.0f << "M"
 				<< " qps : " << request_count);
 
 		curent_size.store(0);
 		request_count.store(0);
-
     }
 
 	void handlerMessage(light::TcpConnectionPtr connPtr, const light::BufferPtr& buffer) {

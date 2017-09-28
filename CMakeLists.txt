@@ -28,16 +28,17 @@ link_directories(
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(WIN32)
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
     include_directories(
         ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/Win32-Code
         )
     link_directories(
-        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/lib/win
+        ${CMAKE_SOURCE_DIR}/lib/Debug
+        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable
         ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.1.2/msvc10/Win32/bin.Debug
         )
-elseif (CMAKE_SYSTEM_NAME MATCHES "linux")
+elseif (UNIX)
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
     link_directories(
         ${CMAKE_SOURCE_DIR}/lib

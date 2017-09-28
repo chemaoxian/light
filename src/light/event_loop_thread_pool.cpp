@@ -5,6 +5,8 @@
 
 namespace light {
 
+
+
 EventLoopThreadPool::EventLoopThreadPool(const std::string& name)
 	:_started(false),
      _nextLoopIndex(0),
@@ -22,7 +24,7 @@ void EventLoopThreadPool::start(uint32_t threadCount) {
 
 	_started = true;
 
-	threadCount = std::max(threadCount, (uint32_t)1);
+	threadCount = max(threadCount, (uint32_t)1);
 	for (size_t i=0; i<threadCount; i++) {
 		boost::shared_ptr<EventLoopThread> threadPtr(new EventLoopThread((boost::format("%s:%d") % _name % (i+1)).str()));
 		threadPtr->start();
