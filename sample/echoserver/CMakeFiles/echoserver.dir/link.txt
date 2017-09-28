@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/echoserver.dir/main.cpp.o  -o ../../bin/echoserver  -L/usr/local/lib -rdynamic -lrt -lpthread -lboost_system -lboost_thread -levent -levent_core -levent_pthreads ../../lib/liblight.a -llog4cplus -levent -levent_core -levent_extra -llog4cplus -Wl,-rpath,/usr/local/lib 
