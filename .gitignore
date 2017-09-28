@@ -46,3 +46,5 @@ ipch
 *.opensdf
 *.cmake
 autom4te.cache
+Makefile
+bin
