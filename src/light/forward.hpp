@@ -52,9 +52,9 @@ typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpConnectionPtr&, const BufferPtr&)> MessageHandler;
+typedef boost::function<void(TcpConnectionPtr, const BufferPtr&)> MessageHandler;
 
-typedef boost::function<void(TcpConnectionPtr&)> ConnectionHandler;
+typedef boost::function<void(TcpConnectionPtr)> ConnectionHandler;
 
 }
 

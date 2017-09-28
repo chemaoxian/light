@@ -4,14 +4,14 @@ regress-regress_thread.o: regress_thread.c \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/time.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
  /usr/include/bits/byteswap.h /usr/include/sys/select.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
  /usr/include/bits/pthreadtypes.h /usr/include/stdio.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
@@ -27,8 +27,10 @@ regress-regress_thread.o: regress_thread.c \
  /usr/include/bits/resource.h /usr/include/pthread.h /usr/include/sched.h \
  /usr/include/bits/sched.h /usr/include/bits/setjmp.h \
  /usr/include/assert.h ../compat/sys/queue.h ../include/event2/util.h \
- /usr/include/sys/time.h /usr/include/stdint.h /usr/include/bits/wchar.h \
- /usr/include/netdb.h /usr/include/netinet/in.h /usr/include/sys/socket.h \
+ /usr/include/sys/time.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/netdb.h \
+ /usr/include/netinet/in.h /usr/include/sys/socket.h \
  /usr/include/sys/uio.h /usr/include/bits/uio.h \
  /usr/include/bits/socket.h /usr/include/bits/sockaddr.h \
  /usr/include/asm/socket.h /usr/include/asm-generic/socket.h \
@@ -65,7 +67,7 @@ regress-regress_thread.o: regress_thread.c \
 
 /usr/include/time.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h:
 
 /usr/include/endian.h:
 
@@ -93,7 +95,7 @@ regress-regress_thread.o: regress_thread.c \
 
 /usr/include/wchar.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -164,6 +166,8 @@ regress-regress_thread.o: regress_thread.c \
 ../include/event2/util.h:
 
 /usr/include/sys/time.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h:
 
 /usr/include/stdint.h:
 

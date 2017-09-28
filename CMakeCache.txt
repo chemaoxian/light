@@ -180,7 +180,7 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 light_BINARY_DIR:STATIC=/home/shiwei/light/light
 
 //Dependencies for the target
-light_LIB_DEPENDS:STATIC=general;libevent;general;libevent_core;general;libevent_extras.lib;general;ws2_32.lib;general;log4cplusD.lib;
+light_LIB_DEPENDS:STATIC=general;event;general;event_core;general;event_extra;general;log4cplus;
 
 //Value Computed by CMake
 light_SOURCE_DIR:STATIC=/home/shiwei/light/light

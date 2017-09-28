@@ -12,7 +12,7 @@ namespace light {
 	class SignalEvent : public boost::enable_shared_from_this<SignalEvent>
 	{
 	public:
-		static SignalEventPtr create(EventLoopPtr& eventLoop, int sig, const Handler& handler, bool repeat);
+		static SignalEventPtr create(EventLoopPtr eventLoop, int sig, const Handler& handler, bool repeat);
 
 		~SignalEvent();
 

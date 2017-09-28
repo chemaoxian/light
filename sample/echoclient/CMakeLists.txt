@@ -5,4 +5,8 @@
 #file(GLOB_RECURSE project_cpps *.cpp *.cxx *.cc)
 
 add_executable(echoclient main.cpp)
-target_link_libraries(echoclient libevent libevent_core light log4cplusD.lib)
+target_link_libraries(echoclient rt pthread)
+target_link_libraries(echoclient boost_system boost_thread)
+target_link_libraries(echoclient event event_core event_pthreads)
+target_link_libraries(echoclient light)
+target_link_libraries(echoclient log4cplus.a)

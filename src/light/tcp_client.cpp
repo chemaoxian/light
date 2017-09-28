@@ -20,7 +20,7 @@ namespace light {
 
 	TcpClient::~TcpClient()
 	{
-		stop();
+        stopInLoop();
 	}
 
 	bool TcpClient::start(const std::string& host, const Duration& connect_duration, bool auto_connect)

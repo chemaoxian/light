@@ -675,7 +675,7 @@ postuninstall_cmds=''
 finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
-sys_lib_search_path_spec='/usr/lib/gcc/x86_64-redhat-linux/4.4.7 /usr/lib64 /lib64 '
+sys_lib_search_path_spec='/usr/lib/gcc/x86_64-redhat-linux/4.8.2 /usr/lib64 /lib64 '
 sys_lib_dlsearch_path_spec='/lib /usr/lib /usr/local/freetype/lib /usr/lib64/mysql     /usr/local/mysql/lib     /usr/local/lib /usr/lib64/qt-3.3/lib /lib /usr/lib /usr/lib64 /usr/local/lib '
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -731,12 +731,12 @@ prelink_cmds_CXX=''
 postlink_cmds_CXX=''
 file_list_spec_CXX=''
 hardcode_action_CXX='immediate'
-compiler_lib_search_dirs_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.4.7 /usr/lib/gcc/x86_64-redhat-linux/4.4.7 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..'
-predep_objects_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbeginS.o'
-postdep_objects_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtendS.o /usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crtn.o'
+compiler_lib_search_dirs_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.8.2 /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../..'
+predep_objects_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.8.2/crtbeginS.o'
+postdep_objects_CXX='/usr/lib/gcc/x86_64-redhat-linux/4.8.2/crtendS.o /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64/crtn.o'
 predeps_CXX=''
-postdeps_CXX='-lstdc++ -lm -lgcc_s -lc -lgcc_s'
-compiler_lib_search_path_CXX='-L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../..'
+postdeps_CXX='-lstdc++ -lm -lgcc_s -lpthread -lc -lgcc_s'
+compiler_lib_search_path_CXX='-L/usr/lib/gcc/x86_64-redhat-linux/4.8.2 -L/usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../..'
 
 LTCC='gcc'
 LTCFLAGS='-g -O2'
@@ -925,7 +925,7 @@ S["PKG_CONFIG_PATH"]=""
 S["PKG_CONFIG"]="/usr/bin/pkg-config"
 S["MULTI_THREADED_FALSE"]="#"
 S["MULTI_THREADED_TRUE"]=""
-S["PTHREAD_CXXFLAGS"]=""
+S["PTHREAD_CXXFLAGS"]="-pthread"
 S["PTHREAD_LIBS"]=""
 S["ax_pthread_config"]=""
 S["EGREP"]="/bin/grep -E"
@@ -937,8 +937,8 @@ S["am__fastdepCXX_FALSE"]="#"
 S["am__fastdepCXX_TRUE"]=""
 S["CXXDEPMODE"]="depmode=gcc3"
 S["ac_ct_CXX"]="g++"
-S["CXXFLAGS"]="-g -O2 -Wall -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wundef -Wshadow -Wformat -W"\
-"no-variadic-macros -fvisibility=hidden "
+S["CXXFLAGS"]="-g -O2 -Wall -fdiagnostics-show-caret -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wc"\
+"++11-compat -Wundef -Wshadow -Wformat -Wsuggest-attribute=format -Wsuggest-attribute=noreturn -Wno-variadic-macros -fvisibility=hidden -pthread"
 S["CXX"]="g++"
 S["ENABLE_RELEASE_OPTION_FALSE"]="#"
 S["ENABLE_RELEASE_OPTION_TRUE"]=""

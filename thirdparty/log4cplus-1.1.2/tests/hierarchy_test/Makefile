@@ -126,7 +126,7 @@ CPPFLAGS =  -D_GNU_SOURCE=1 -D_REENTRANT
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2 -Wall -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wundef -Wshadow -Wformat -Wno-variadic-macros -fvisibility=hidden 
+CXXFLAGS = -g -O2 -Wall -fdiagnostics-show-caret -Wextra -pedantic -Wstrict-aliasing -Wstrict-overflow -Woverloaded-virtual -Wold-style-cast -Wc++0x-compat -Wc++11-compat -Wundef -Wshadow -Wformat -Wsuggest-attribute=format -Wsuggest-attribute=noreturn -Wno-variadic-macros -fvisibility=hidden -pthread
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
@@ -179,7 +179,7 @@ PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
-PTHREAD_CXXFLAGS = 
+PTHREAD_CXXFLAGS = -pthread
 PTHREAD_LIBS = 
 QT_CFLAGS = 
 QT_LIBS = 

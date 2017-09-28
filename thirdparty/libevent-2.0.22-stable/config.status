@@ -519,7 +519,7 @@ old_postuninstall_cmds=''
 old_archive_cmds='$AR $AR_FLAGS $oldlib$oldobjs~$RANLIB $tool_oldlib'
 lock_old_archive_extraction='no'
 CC='gcc'
-CFLAGS='-g -O2 -Wall -fno-strict-aliasing '
+CFLAGS='-g -O2 -Wall -fno-strict-aliasing -pthread'
 compiler='gcc'
 GCC='yes'
 lt_cv_sys_global_symbol_pipe='sed -n -e '\''s/^.*[	 ]\([ABCDGIRSTW][ABCDGIRSTW]*\)[	 ][	 ]*\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2 \2/p'\'' | sed '\''/ __gnu_lto/d'\'''
@@ -594,7 +594,7 @@ postuninstall_cmds=''
 finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
-sys_lib_search_path_spec='/usr/lib/gcc/x86_64-redhat-linux/4.4.7 /usr/lib64 /lib64 '
+sys_lib_search_path_spec='/usr/lib/gcc/x86_64-redhat-linux/4.8.2 /usr/lib64 /lib64 '
 sys_lib_dlsearch_path_spec='/lib64 /usr/lib64 /lib /usr/lib /usr/local/freetype/lib /usr/lib64/mysql     /usr/local/mysql/lib     /usr/local/lib /usr/lib64/qt-3.3/lib /lib /usr/lib /usr/lib64 /usr/local/lib '
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -747,7 +747,7 @@ S["OPENSSL_FALSE"]="#"
 S["OPENSSL_TRUE"]=""
 S["PTHREADS_FALSE"]="#"
 S["PTHREADS_TRUE"]=""
-S["PTHREAD_CFLAGS"]=""
+S["PTHREAD_CFLAGS"]="-pthread"
 S["PTHREAD_LIBS"]=""
 S["PTHREAD_CC"]="gcc"
 S["acx_pthread_config"]=""
@@ -807,7 +807,6 @@ S["LN_S"]="ln -s"
 S["am__fastdepCC_FALSE"]="#"
 S["am__fastdepCC_TRUE"]=""
 S["CCDEPMODE"]="depmode=gcc3"
-S["am__nodep"]="_no"
 S["AMDEPBACKSLASH"]="\\"
 S["AMDEP_FALSE"]="#"
 S["AMDEP_TRUE"]=""
@@ -819,7 +818,7 @@ S["EXEEXT"]=""
 S["ac_ct_CC"]="gcc"
 S["CPPFLAGS"]=""
 S["LDFLAGS"]=""
-S["CFLAGS"]="-g -O2 -Wall -fno-strict-aliasing "
+S["CFLAGS"]="-g -O2 -Wall -fno-strict-aliasing -pthread"
 S["CC"]="gcc"
 S["host_os"]="linux-gnu"
 S["host_vendor"]="unknown"
@@ -829,22 +828,22 @@ S["build_os"]="linux-gnu"
 S["build_vendor"]="unknown"
 S["build_cpu"]="x86_64"
 S["build"]="x86_64-unknown-linux-gnu"
-S["am__untar"]="$${TAR-tar} xf -"
-S["am__tar"]="$${TAR-tar} chof - \"$$tardir\""
-S["AMTAR"]="$${TAR-tar}"
+S["am__untar"]="${AMTAR} xf -"
+S["am__tar"]="${AMTAR} chof - \"$$tardir\""
+S["AMTAR"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run tar"
 S["am__leading_dot"]="."
 S["SET_MAKE"]=""
 S["AWK"]="gawk"
-S["mkdir_p"]="$(MKDIR_P)"
+S["mkdir_p"]="/bin/mkdir -p"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
 S["install_sh"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/install-sh"
 S["MAKEINFO"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run makeinfo"
 S["AUTOHEADER"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run automake-1.12"
+S["AUTOMAKE"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run automake-1.11"
 S["AUTOCONF"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run aclocal-1.12"
+S["ACLOCAL"]="${SHELL} /home/shiwei/light/light/thirdparty/libevent-2.0.22-stable/missing --run aclocal-1.11"
 S["VERSION"]="2.0.22-stable"
 S["PACKAGE"]="libevent"
 S["CYGPATH_W"]="echo"
@@ -1435,7 +1434,7 @@ $as_echo "$as_me: executing $ac_file commands" >&6;}
     # Strip MF so we end up with the name of the file.
     mf=`echo "$mf" | sed -e 's/:.*$//'`
     # Check whether this is an Automake generated Makefile or not.
-    # We used to match only the files named 'Makefile.in', but
+    # We used to match only the files named `Makefile.in', but
     # some people rename them; so instead we look at the file content.
     # Grep'ing the first line is not enough: some people post-process
     # each Makefile.in and add a new line on top of each file to say so.
@@ -1469,19 +1468,21 @@ $as_echo X"$mf" |
       continue
     fi
     # Extract the definition of DEPDIR, am__include, and am__quote
-    # from the Makefile without running 'make'.
+    # from the Makefile without running `make'.
     DEPDIR=`sed -n 's/^DEPDIR = //p' < "$mf"`
     test -z "$DEPDIR" && continue
     am__include=`sed -n 's/^am__include = //p' < "$mf"`
     test -z "am__include" && continue
     am__quote=`sed -n 's/^am__quote = //p' < "$mf"`
+    # When using ansi2knr, U may be empty or an underscore; expand it
+    U=`sed -n 's/^U = //p' < "$mf"`
     # Find all dependency output files, they are included files with
     # $(DEPDIR) in their names.  We invoke sed twice because it is the
     # simplest approach to changing $(DEPDIR) to its actual value in the
     # expansion.
     for file in `sed -n "
       s/^$am__include $am__quote\(.*(DEPDIR).*\)$am__quote"'$/\1/p' <"$mf" | \
-	 sed -e 's/\$(DEPDIR)/'"$DEPDIR"'/g'`; do
+	 sed -e 's/\$(DEPDIR)/'"$DEPDIR"'/g' -e 's/\$U/'"$U"'/g'`; do
       # Make sure the directory exists.
       test -f "$dirpart/$file" && continue
       fdir=`$as_dirname -- "$file" ||

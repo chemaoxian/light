@@ -40,7 +40,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 elseif (CMAKE_SYSTEM_NAME MATCHES "linux")
     message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
     link_directories(
-        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/lib/lin
+        ${CMAKE_SOURCE_DIR}/lib
         ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.1.2/src/.libs
     )
 else()

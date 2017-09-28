@@ -4,7 +4,7 @@ select.lo: select.c include/event2/event-config.h \
  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
  /usr/include/time.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
  /usr/include/bits/byteswap.h /usr/include/sys/select.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
@@ -16,7 +16,7 @@ select.lo: select.c include/event2/event-config.h \
  /usr/include/sys/ucontext.h /usr/include/bits/sigthread.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
@@ -28,6 +28,7 @@ select.lo: select.c include/event2/event-config.h \
  /usr/include/linux/errno.h /usr/include/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  event-internal.h include/event2/event_struct.h include/event2/util.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/netdb.h \
  /usr/include/netinet/in.h /usr/include/sys/socket.h \
  /usr/include/sys/uio.h /usr/include/bits/uio.h \
@@ -60,7 +61,7 @@ include/event2/event-config.h:
 
 /usr/include/time.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h:
 
 /usr/include/endian.h:
 
@@ -108,7 +109,7 @@ compat/sys/queue.h:
 
 /usr/include/wchar.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -159,6 +160,8 @@ event-internal.h:
 include/event2/event_struct.h:
 
 include/event2/util.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h:
 
 /usr/include/stdint.h:
 

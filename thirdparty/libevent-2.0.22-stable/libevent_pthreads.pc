@@ -12,5 +12,5 @@ Requires: libevent
 Conflicts:
 Libs: -L${libdir} -levent_pthreads
 Libs.private: -lrt  
-Cflags: -I${includedir} 
+Cflags: -I${includedir} -pthread
 

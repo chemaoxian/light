@@ -3,7 +3,7 @@ bufferevent_sock.lo: bufferevent_sock.c /usr/include/sys/types.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h /usr/include/time.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h \
  /usr/include/endian.h /usr/include/bits/endian.h \
  /usr/include/bits/byteswap.h /usr/include/sys/select.h \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
@@ -14,7 +14,7 @@ bufferevent_sock.lo: bufferevent_sock.c /usr/include/sys/types.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/stdlib.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
@@ -27,6 +27,7 @@ bufferevent_sock.lo: bufferevent_sock.c /usr/include/sys/types.h \
  /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
  /usr/include/asm-generic/socket.h /usr/include/asm/sockios.h \
  /usr/include/asm-generic/sockios.h /usr/include/netinet/in.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/bits/in.h \
  include/event2/util.h /usr/include/netdb.h /usr/include/rpc/netdb.h \
  /usr/include/bits/netdb.h include/event2/bufferevent.h \
@@ -55,7 +56,7 @@ bufferevent_sock.lo: bufferevent_sock.c /usr/include/sys/types.h \
 
 /usr/include/time.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h:
 
 /usr/include/endian.h:
 
@@ -99,7 +100,7 @@ include/event2/event-config.h:
 
 /usr/include/wchar.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -152,6 +153,8 @@ include/event2/event-config.h:
 /usr/include/asm-generic/sockios.h:
 
 /usr/include/netinet/in.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h:
 
 /usr/include/stdint.h:
 

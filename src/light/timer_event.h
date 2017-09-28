@@ -13,7 +13,7 @@ namespace light {
 class TimerEvent : public boost::enable_shared_from_this<TimerEvent>
 {
 public:
-	static TimerEventPtr create(EventLoopPtr& eventLoop, const Duration& duration, const Handler& handler, bool repeat=false);
+	static TimerEventPtr create(EventLoopPtr eventLoop, const Duration& duration, const Handler& handler, bool repeat=false);
 
 	~TimerEvent();
 

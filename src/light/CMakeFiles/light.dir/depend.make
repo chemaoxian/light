@@ -1050,6 +1050,14 @@ src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/boost/utilit
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/thread.h
+src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -1083,14 +1091,6 @@ src/light/CMakeFiles/light.dir/event_loop.cpp.o: src/light/forward.hpp
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: src/light/log4cplus_forward.h
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: src/light/slice.h
 src/light/CMakeFiles/light.dir/event_loop.cpp.o: src/light/timer_event.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/thread.h
-src/light/CMakeFiles/light.dir/event_loop.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: src/light/event_loop_thread.cpp
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/boost/any.hpp
@@ -2061,6 +2061,13 @@ src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/boost
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -2093,13 +2100,6 @@ src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: src/light/event_loop_thr
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: src/light/forward.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: src/light/log4cplus_forward.h
 src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: src/light/slice.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/event_loop_thread.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: src/light/event_loop_thread_pool.cpp
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/boost/any.hpp
@@ -3090,6 +3090,13 @@ src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -3122,13 +3129,6 @@ src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: src/light/event_loo
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: src/light/forward.hpp
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: src/light/log4cplus_forward.h
 src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: src/light/slice.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/event_loop_thread_pool.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/signal_event.cpp.o: src/light/signal_event.cpp
 src/light/CMakeFiles/light.dir/signal_event.cpp.o: /usr/local/include/boost/any.hpp
@@ -5085,6 +5085,13 @@ src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/boost/utilit
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -5120,13 +5127,6 @@ src/light/CMakeFiles/light.dir/tcp_client.cpp.o: src/light/tcp_client.h
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: src/light/tcp_connection.h
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: src/light/tcp_connector.h
 src/light/CMakeFiles/light.dir/tcp_client.cpp.o: src/light/timer_event.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/tcp_client.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: src/light/tcp_connection.cpp
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/boost/any.hpp
@@ -6097,6 +6097,13 @@ src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/boost/ut
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -6129,13 +6136,6 @@ src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: src/light/forward.hpp
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: src/light/log4cplus_forward.h
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: src/light/slice.h
 src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: src/light/tcp_connection.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/tcp_connection.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: src/light/tcp_connector.cpp
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/boost/any.hpp
@@ -7106,6 +7106,13 @@ src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/boost/uti
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -7139,13 +7146,6 @@ src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: src/light/log4cplus_forward.
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: src/light/slice.h
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: src/light/tcp_connection.h
 src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: src/light/tcp_connector.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/tcp_connector.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: src/light/tcp_listener.cpp
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/boost/any.hpp
@@ -8116,6 +8116,13 @@ src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/boost/util
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -8148,13 +8155,6 @@ src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: src/light/forward.hpp
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: src/light/log4cplus_forward.h
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: src/light/slice.h
 src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: src/light/tcp_listener.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/tcp_listener.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: src/light/tcp_server.cpp
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/boost/any.hpp
@@ -9125,6 +9125,13 @@ src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/boost/utilit
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/boost/version.hpp
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/boost/visit_each.hpp
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/boost/weak_ptr.hpp
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/buffer.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/bufferevent.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/dns.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/event-config.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/event.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/listener.h
+src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/event2/util.h
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/log4cplus/appender.h
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/log4cplus/config.hxx
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: /usr/local/include/log4cplus/config/defines.hxx
@@ -9161,13 +9168,6 @@ src/light/CMakeFiles/light.dir/tcp_server.cpp.o: src/light/slice.h
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: src/light/tcp_connection.h
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: src/light/tcp_listener.h
 src/light/CMakeFiles/light.dir/tcp_server.cpp.o: src/light/tcp_server.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/buffer.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/bufferevent.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/dns.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event-config.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/event.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/listener.h
-src/light/CMakeFiles/light.dir/tcp_server.cpp.o: thirdparty/libevent-2.0.22-stable/include/event2/util.h
 
 src/light/CMakeFiles/light.dir/timer_event.cpp.o: src/light/timer_event.cpp
 src/light/CMakeFiles/light.dir/timer_event.cpp.o: /usr/local/include/boost/any.hpp

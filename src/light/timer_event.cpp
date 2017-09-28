@@ -1,16 +1,16 @@
-#include <light/timer_event.h> 
+#include <light/timer_event.h>
 #include <light/event_loop.h>
 #include <light/exception.h>
 
 namespace light {
 
 TimerEvent::TimerEvent(EventLoopPtr& eventLoop)
-	: _loop(eventLoop), 
+	: _loop(eventLoop),
 	 _repeat(false),
 	  _started(false){
 
 	_timerEvent = evtimer_new(_loop->getEventBase(), &TimerEvent::_eventTimerCallback, this);
-	
+
 	if (_timerEvent == NULL) {
 		throw LightException("evtimer_new failed");
 	}
@@ -22,7 +22,8 @@ TimerEvent::~TimerEvent() {
 }
 
 void TimerEvent::_start(const Duration& duration, const Handler& handler, bool repeat) {
-	event_add(_timerEvent, &(duration.TimeVal()));
+    timeval val = duration.TimeVal();
+	event_add(_timerEvent, &val);
 	_repeat = repeat;
 	_handler = handler;
 	_interval = duration;
@@ -71,7 +72,7 @@ Duration TimerEvent::getDuration()
 	return _interval;
 }
 
-light::TimerEventPtr TimerEvent::create(EventLoopPtr& eventLoop, const Duration& duration, const Handler& handler, bool repeat/*=false*/) {
+light::TimerEventPtr TimerEvent::create(EventLoopPtr eventLoop, const Duration& duration, const Handler& handler, bool repeat/*=false*/) {
 	TimerEventPtr timer = boost::shared_ptr<TimerEvent>(new TimerEvent(eventLoop));
 	timer->_start(duration, handler, repeat);
 	timer->_selfPtr = timer;

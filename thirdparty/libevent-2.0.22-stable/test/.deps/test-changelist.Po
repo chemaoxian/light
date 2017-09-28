@@ -4,7 +4,7 @@ test-changelist.o: test-changelist.c ../include/event2/event-config.h \
  /usr/include/gnu/stubs-64.h /usr/include/bits/posix_opt.h \
  /usr/include/bits/environments.h /usr/include/bits/types.h \
  /usr/include/bits/typesizes.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h \
  /usr/include/bits/confname.h /usr/include/getopt.h \
  /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
  /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
@@ -20,17 +20,18 @@ test-changelist.o: test-changelist.c ../include/event2/event-config.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
  /usr/include/alloca.h /usr/include/stdio.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/string.h /usr/include/xlocale.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/errno.h /usr/include/bits/errno.h \
  /usr/include/linux/errno.h /usr/include/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
- ../include/event2/event.h ../include/event2/util.h /usr/include/stdint.h \
- /usr/include/bits/wchar.h /usr/include/netdb.h /usr/include/netinet/in.h \
- /usr/include/bits/in.h /usr/include/rpc/netdb.h \
- /usr/include/bits/netdb.h
+ ../include/event2/event.h ../include/event2/util.h \
+ /usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/netdb.h \
+ /usr/include/netinet/in.h /usr/include/bits/in.h \
+ /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
 
 ../include/event2/event-config.h:
 
@@ -54,7 +55,7 @@ test-changelist.o: test-changelist.c ../include/event2/event-config.h \
 
 /usr/include/bits/typesizes.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stddef.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stddef.h:
 
 /usr/include/bits/confname.h:
 
@@ -126,7 +127,7 @@ test-changelist.o: test-changelist.c ../include/event2/event-config.h \
 
 /usr/include/wchar.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/4.4.7/include/stdarg.h:
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -157,6 +158,8 @@ test-changelist.o: test-changelist.c ../include/event2/event-config.h \
 ../include/event2/event.h:
 
 ../include/event2/util.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdint.h:
 
 /usr/include/stdint.h:
 

@@ -4,7 +4,7 @@
 
 namespace light {
 
-SignalEventPtr SignalEvent::create(EventLoopPtr& eventLoop, int sig, const Handler& handler, bool repeat) {
+SignalEventPtr SignalEvent::create(EventLoopPtr eventLoop, int sig, const Handler& handler, bool repeat) {
 	SignalEventPtr sigEventPtr = boost::shared_ptr<SignalEvent>(new SignalEvent(eventLoop, sig, repeat));
 	sigEventPtr->_start(handler);
 	sigEventPtr->_selfPtr = sigEventPtr;
@@ -18,7 +18,7 @@ SignalEvent::SignalEvent(EventLoopPtr& eventLoop, int sig, bool repeat)
 	 _repeat(repeat),
 	 _started(false),
 	 _sig(sig){
-	
+
 	uint32_t flags = EV_SIGNAL;
 	if (_repeat) {
 		flags |= EV_PERSIST;

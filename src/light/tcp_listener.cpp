@@ -10,7 +10,7 @@ TcpListener::TcpListener(EventLoopPtr loop, const std::string& name)
      _listener(NULL),
 	 _started(false) {
 
-	
+
 }
 
 TcpListener::~TcpListener() {
@@ -23,7 +23,7 @@ TcpListener::~TcpListener() {
 
 bool TcpListener::start(const std::string& listenAddr) {
 
-	LOG4CPLUS_ASSERT(light_logger, _started == FALSE);
+	BOOST_ASSERT(_started == false);
 
 	_started = true;
 	sockaddr addr = {0};
@@ -37,9 +37,9 @@ bool TcpListener::start(const std::string& listenAddr) {
 		return false;
 	}
 
-	_listener = evconnlistener_new_bind(_loop->getEventBase(), 
-		&TcpListener::_eventCallback, 
-		this, 
+	_listener = evconnlistener_new_bind(_loop->getEventBase(),
+		&TcpListener::_eventCallback,
+		this,
 		LEV_OPT_CLOSE_ON_FREE|LEV_OPT_CLOSE_ON_EXEC|LEV_OPT_REUSEABLE|LEV_OPT_THREADSAFE,
 		-1,
 		&addr,
@@ -49,9 +49,9 @@ bool TcpListener::start(const std::string& listenAddr) {
 		_started = false;
 		return false;
 	}
-	
+
 	evconnlistener_set_error_cb(_listener, &TcpListener::_eventError);
-	
+
 	return true;
 }
 
@@ -69,9 +69,9 @@ void TcpListener::_handleRead(struct evconnlistener * l, evutil_socket_t fd, str
 }
 
 void TcpListener::_handleError(struct evconnlistener *) {
-	
+
 	LOG4CPLUS_ERROR(light_logger, "TcpListener [" << _name <<  "] occur a errror");
-	
+
 	if (_errorHandler) {
 		_errorHandler();
 	}
