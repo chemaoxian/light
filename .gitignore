@@ -44,4 +44,4 @@
 **/.vscode
 **/*.cmake
 **/*.opensdf
-**/CMakeFiles
+**/*.cmake
