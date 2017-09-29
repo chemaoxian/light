@@ -11,7 +11,8 @@ namespace light {
 		 _bufferEvent(bufferevent_socket_new(looper->getEventBase(), fd,
 											 BEV_OPT_CLOSE_ON_FREE | BEV_OPT_THREADSAFE)),
 		 _status(kConnecting),
-		 _closeMode(kNone) {
+		 _closeMode(kNone),
+		 _messageBuffer(new Buffer(Buffer::kInitialSize, 0)){
 
 		bufferevent_setcb(_bufferEvent,
 			&TcpConnection::_readCallback,
@@ -26,7 +27,8 @@ namespace light {
 		_peer(peer),
 		_bufferEvent(buffer),
 		_status(kConnecting),
-		_closeMode(kNone) {
+		_closeMode(kNone),
+		_messageBuffer(new Buffer(Buffer::kInitialSize, 0)){
 
 			bufferevent_setcb(_bufferEvent,
 				&TcpConnection::_readCallback,
@@ -153,14 +155,14 @@ namespace light {
 			
 			TcpConnectionPtr connPtr = shared_from_this();
 			
-			BufferPtr buffer_ptr;
-			
 			while (true) {
-				buffer_ptr = _codec_hander(inputBuffer);
+				codec::CodecStatus status = _codec_hander(inputBuffer, _messageBuffer);
 
-				if (buffer_ptr)
+				if (status == codec::kComplete)
 				{
-					_msgHandler(connPtr, buffer_ptr);
+					_msgHandler(connPtr, _messageBuffer);
+
+					_messageBuffer->Reset();
 				}
 				else
 				{

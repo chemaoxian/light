@@ -35,19 +35,19 @@ public:
 
 	bool start (const std::string& host) {
 
-		_client.setCodecHandler(light::DefaultStringCoderHandler());
+		_client.setCodecHandler(light::codec::DefaultStringCoderHandler());
 		_client.setMessageHandler(boost::bind(&EchoClient::handlerMessage, this, _1, _2));
 		_client.setConnectionHandler(boost::bind(&EchoClient::handleConnect, this, _1));
 		return _client.start(host, light::Duration(1.0));
 	}
 
-	void handlerMessage(light::TcpConnectionPtr connPtr, const light::BufferPtr& buffer) {
+	void handlerMessage(light::TcpConnectionPtr& connPtr, const light::BufferPtr& buffer) {
 		//printf("%s\n", buffer->data());
 
 		//connPtr->send(buffer->data());
 	}
 
-	void handleConnect(light::TcpConnectionPtr connPtr) {
+	void handleConnect(light::TcpConnectionPtr& connPtr) {
 		printf("new connect : %s === state : %s\n", connPtr->getName().c_str(), connPtr->getStatusString());
 
 		if (connPtr->getStatus() == light::TcpConnection::kConnected)

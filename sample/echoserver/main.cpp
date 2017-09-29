@@ -33,7 +33,7 @@ public:
 
 	bool start (const std::string& host, int ioPoolCount) {
 
-		_server.setCodecHandler(light::DefaultStringCoderHandler());
+		_server.setCodecHandler(light::codec::DefaultStringCoderHandler());
 		_server.setMessageHandler(boost::bind(&EchoServer::handlerMessage, this, _1, _2));
 		_server.setConnectionHandler(boost::bind(&EchoServer::handleConnect, this, _1));
 
@@ -51,7 +51,7 @@ public:
 		request_count.store(0);
     }
 
-	void handlerMessage(light::TcpConnectionPtr connPtr, const light::BufferPtr& buffer) {
+	void handlerMessage(light::TcpConnectionPtr& connPtr, const light::BufferPtr& buffer) {
 		//printf("%s\n", buffer->data());
 
 		connPtr->send(buffer->data());
@@ -61,7 +61,7 @@ public:
 		request_count.fetch_add(1);
 	}
 
-	void handleConnect(light::TcpConnectionPtr connPtr) {
+	void handleConnect(light::TcpConnectionPtr& connPtr) {
 		//printf("new connect : %s === state : %s\n", connPtr->getName().c_str(), connPtr->getStatusString());
 		if (connPtr->getStatus() == light::TcpConnection::kConnected) {
 			_count.fetch_add(1);

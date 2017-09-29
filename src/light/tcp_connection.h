@@ -100,6 +100,7 @@ private:
 	boost::atomic<Status> _status;
 	CloseMode	_closeMode;
 	boost::any  _context;
+	BufferPtr _messageBuffer;
 	
 };
 

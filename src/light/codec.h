@@ -5,9 +5,8 @@
 #include <boost/type_traits.hpp>
 
 namespace light {
-
-	typedef boost::shared_ptr<Buffer> BufferPtr;
-	typedef boost::function<BufferPtr(evbuffer*)> CodecHandler;
+	
+namespace codec {
 
 	template <typename HeaderType>
 	class DefaultPacketCodecHandler {
@@ -15,32 +14,31 @@ namespace light {
 		DefaultPacketCodecHandler(){}
 		~DefaultPacketCodecHandler(){}
 
-		 BufferPtr operator () (evbuffer* input_buffer) const {
+		 codec::CodecStatus operator () (evbuffer* inputBuffer, BufferPtr& outBuffer) const {
 			BOOST_STATIC_ASSERT(boost::is_integral<HeaderType>::value == true && sizeof(HeaderType) <= 4);
 
-			size_t input_len = evbuffer_get_length(input_buffer);
+			size_t input_len = evbuffer_get_length(inputBuffer);
 			if (input_len < sizeof(HeaderType)) {
-				return boost::shared_ptr<Buffer>();
+				return kNeedMore;
 			}
 
 			HeaderType header_len;
-			ev_ssize_t read_header_len = evbuffer_copyout(input_buffer, &header_len, sizeof(header_len)) == sizeof(header_len);
+			ev_ssize_t read_header_len = evbuffer_copyout(inputBuffer, &header_len, sizeof(header_len)) == sizeof(header_len);
 			BOOST_ASSERT(read_header_len == sizeof(header_len));
 
 			u_long host_header_len = ntohl(header_len);
 
 			if (input_len < host_header_len)
 			{
-				return boost::shared_ptr<Buffer>();
+				return kNeedMore;
 			}
 
-			BufferPtr buffer_ptr= boost::make_shared<Buffer>(host_header_len, 0);
-			buffer_ptr->EnsureWritableBytes(host_header_len);
+			outBuffer->EnsureWritableBytes(host_header_len);
 
-			ev_ssize_t remove_size = evbuffer_remove(input_buffer, buffer_ptr->WriteBegin(), host_header_len);
+			ev_ssize_t remove_size = evbuffer_remove(inputBuffer, outBuffer->WriteBegin(), host_header_len);
 			BOOST_ASSERT(remove_size == host_header_len);
 
-			return buffer_ptr;
+			return kComplete;
 		}
 	};
 
@@ -49,22 +47,24 @@ namespace light {
 		DefaultStringCoderHandler(){}
 		~DefaultStringCoderHandler(){}
 
-		BufferPtr operator () (evbuffer* input_buffer) const {
+		codec::CodecStatus operator () (evbuffer* inputBuffer, BufferPtr& outBuffer) const {
 			size_t readLen = 0;
-			char* readLine = evbuffer_readln(input_buffer, &readLen, EVBUFFER_EOL_CRLF);
+			char* readLine = evbuffer_readln(inputBuffer, &readLen, EVBUFFER_EOL_CRLF);
 			if (readLine == NULL) {
 				free(readLine);
-				return boost::shared_ptr<Buffer>((Buffer*)NULL);
+				return kNeedMore;
 			}
 
-			BufferPtr buffer_ptr= boost::make_shared<Buffer>(readLen + 1, 0);
-			buffer_ptr->Write(readLine, readLen + 1);
+			outBuffer->EnsureWritableBytes(readLen + 1);
+			outBuffer->Write(readLine, readLen+1);
 
 			free(readLine);
 
-			return buffer_ptr;
+			return kComplete;
 		}
 	};
+
+}
 }
 
 

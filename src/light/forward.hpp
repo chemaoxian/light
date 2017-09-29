@@ -21,10 +21,20 @@
 #include <event2/dns.h>
 
 #include <light/buffer.h>
-#include <light/codec.h>
 #include <light/duration.h>
 
 namespace light {
+
+	namespace codec {
+
+		enum CodecStatus {
+			kNeedMore,
+			kComplete,
+			kError
+		};
+
+
+	}
 
 class TimerEvent;
 
@@ -52,9 +62,11 @@ typedef boost::shared_ptr<EventLoopThreadPool>	EventLoopThreadPoolPtr;
 
 typedef boost::function<void()> Handler;
 
-typedef boost::function<void(TcpConnectionPtr, const BufferPtr&)> MessageHandler;
+typedef boost::function<void(TcpConnectionPtr&, const BufferPtr&)> MessageHandler;
 
-typedef boost::function<void(TcpConnectionPtr)> ConnectionHandler;
+typedef boost::function<void(TcpConnectionPtr&)> ConnectionHandler;
+
+typedef boost::function<codec::CodecStatus(evbuffer*, BufferPtr&)> CodecHandler;
 
 }
 
