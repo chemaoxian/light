@@ -51,13 +51,16 @@ namespace light {
 
 		BufferPtr operator () (evbuffer* input_buffer) const {
 			size_t readLen = 0;
-			const char* readLine = evbuffer_readln(input_buffer, &readLen, EVBUFFER_EOL_CRLF);
+			char* readLine = evbuffer_readln(input_buffer, &readLen, EVBUFFER_EOL_CRLF);
 			if (readLine == NULL) {
+				free(readLine);
 				return boost::shared_ptr<Buffer>((Buffer*)NULL);
 			}
 
 			BufferPtr buffer_ptr= boost::make_shared<Buffer>(readLen + 1, 0);
 			buffer_ptr->Write(readLine, readLen + 1);
+
+			free(readLine);
 
 			return buffer_ptr;
 		}

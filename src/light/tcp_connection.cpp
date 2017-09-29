@@ -150,13 +150,16 @@ namespace light {
 	void TcpConnection::_handleRead() {
 		evbuffer* inputBuffer = bufferevent_get_input(_bufferEvent);
 		if (_msgHandler) {
+			
+			TcpConnectionPtr connPtr = shared_from_this();
+			
 			BufferPtr buffer_ptr;
+			
 			while (true) {
 				buffer_ptr = _codec_hander(inputBuffer);
 
 				if (buffer_ptr)
 				{
-                    TcpConnectionPtr connPtr = shared_from_this();
 					_msgHandler(connPtr, buffer_ptr);
 				}
 				else
