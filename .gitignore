@@ -39,7 +39,7 @@
 CMakeCache.txt
 CMakeFiles
 Win32
-Debug
+Debugg
 ipch
 .vscode
 *.cmake
@@ -47,3 +47,4 @@ ipch
 autom4te.cache
 Makefile
 bin
+**/*.dir
