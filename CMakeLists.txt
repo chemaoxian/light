@@ -3,21 +3,18 @@ cmake_minimum_required(VERSION 2.8)
 project(light)
 
 set(CMAKE_BUILD_TYPE "DEBUG")
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/build/cmake)
 
 message("${CMAKE_CXX_FLAGS_DEBUG}")
 
 set(Boost_USE_MULTITHREADED ON)
 
 find_package(Boost REQUIRED)
-include(FindLibevent.cmake)
+find_package(libevent REQUIRED)
 
 set(Boost_USE_STATIC_LIBS  ON)         # only find static libs
 set(Boost_USE_MULTITHREADED  ON)
 set(Boost_USE_STATIC_RUNTIME  OFF)
-
-if(NOT Boost_FOUND)
-    message("Boost not found")
-endif()
 
 include_directories(./src)
 include_directories(${LIBEVENT_INCLUDE_DIRS})
