@@ -125,7 +125,7 @@ int main(int argc, const char* argv[]) {
 
 	EchoServer server(loop);
 
-	server.start(argv[1], 4);
+	server.start(argv[1], 10);
 
 	loop->run();
 

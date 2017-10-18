@@ -1,8 +1,17 @@
 
 aux_source_directory(${CMAKE_SOURCE_DIR}/src/light LIGHT_SRCS)
 
-file(GLOB_RECURSE project_headers *.h *.hpp)
-file(GLOB_RECURSE project_cpps *.cpp *.cxx *.cc)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
-add_library(light STATIC ${project_headers} ${project_cpps})
-#target_link_libraries(light event event_core event_extra log4cplus)
+add_library(light STATIC ${LIGHT_SRCS})
+
+if(WIN32)
+    target_link_libraries(light libevent_core)
+    target_link_libraries(light libevent_extra)
+else()
+    target_link_libraries(light libevent_core.a)
+    target_link_libraries(light libevent_extra.a)
+    target_link_libraries(light libevent_pthreads.a)
+endif()
+
+target_link_libraries(light liblog4cplus.a)

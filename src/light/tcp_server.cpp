@@ -5,7 +5,7 @@
 #include <light/tcp_connection.h>
 
 namespace light {
-    
+
 	TcpServer::TcpServer(EventLoopPtr& loop, const std::string& name)
 		:_is_running(false),
 		 _listener(loop, name + ":" + "TcpListener"),
@@ -25,7 +25,7 @@ namespace light {
 
 	TcpServer::~TcpServer()
 	{
-	
+
 	}
 
 	bool TcpServer::start(const std::string& host, int threadCount, int max_connection/*=50000*/)
@@ -35,7 +35,7 @@ namespace light {
 
 		bool expect = false;
 		if (_is_running.compare_exchange_strong(expect, true)) {
-			
+
 			if (!_listener.start(host)) {
 				return false;
 			}
@@ -69,6 +69,8 @@ namespace light {
 			EventLoopPtr next_looper = _threadPool->getNextEventLoop();
 			uint32_t conn_id = _next_connection_id ++;
 			std::string conn_name = _name + ":" + boost::to_string(conn_id);
+
+            evutil_make_socket_nonblocking(s);
 			TcpConnectionPtr new_conn = boost::make_shared<TcpConnection>(next_looper,conn_name, s, *addr);
 
 			new_conn->setMessageHandler(_message_handler);

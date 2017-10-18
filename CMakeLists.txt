@@ -2,9 +2,14 @@ cmake_minimum_required(VERSION 2.8)
 
 project(light)
 
+set(CMAKE_BUILD_TYPE "DEBUG")
+
+message("${CMAKE_CXX_FLAGS_DEBUG}")
+
 set(Boost_USE_MULTITHREADED ON)
 
 find_package(Boost REQUIRED)
+include(FindLibevent.cmake)
 
 set(Boost_USE_STATIC_LIBS  ON)         # only find static libs
 set(Boost_USE_MULTITHREADED  ON)
@@ -14,39 +19,11 @@ if(NOT Boost_FOUND)
     message("Boost not found")
 endif()
 
-include_directories(
-    ${Boost_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/include
-    ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.1.2/include
-    ${CMAKE_SOURCE_DIR}/src
-    )
-  
-link_directories(
-    ${Boost_LIBRARY_DIRS}
-)
-
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-
-if(WIN32)
-    message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
-    include_directories(
-        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable/Win32-Code
-        )
-    link_directories(
-        ${CMAKE_SOURCE_DIR}/lib/Debug
-        ${CMAKE_SOURCE_DIR}/thirdparty/libevent-2.0.22-stable
-        ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.1.2/msvc10/Win32/bin.Debug
-        )
-elseif (UNIX)
-    message(STATUS "current platform : ${CMAKE_SYSTEM_NAME}")
-    link_directories(
-        ${CMAKE_SOURCE_DIR}/lib
-        ${CMAKE_SOURCE_DIR}/thirdparty/log4cplus-1.1.2/src/.libs
-    )
-else()
-     message(STATUS "other platform : ${CMAKE_SYSTEM_NAME}")
-endif()
+include_directories(./src)
+include_directories(${LIBEVENT_INCLUDE_DIRS})
+include_directories(${LOG4CPLUS_INCLUDE_DIR})
+link_directories(${LIBEVENT_LIB_DIR})
+link_directories(${LOG4CPLUS_LIB_DIR})
 
 add_subdirectory(src/light)
 add_subdirectory(sample/echoserver)

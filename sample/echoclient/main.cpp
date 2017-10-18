@@ -45,6 +45,7 @@ public:
 		//printf("%s\n", buffer->data());
 
 		//connPtr->send(buffer->data());
+        sendMessage();
 	}
 
 	void handleConnect(light::TcpConnectionPtr& connPtr) {
@@ -52,11 +53,12 @@ public:
 
 		if (connPtr->getStatus() == light::TcpConnection::kConnected)
 		{
-			_timer = _looper->runEvery(light::Duration(1.0), boost::bind(&EchoClient::sendMessage, this));
+            //_timer = _looper->runEvery(light::Duration(1.0), boost::bind(&EchoClient::sendMessage, this));
+            sendMessage();
 		}
 		else
 		{
-			_timer->cancel();
+            //_timer->cancel();
 		}
 	}
 
