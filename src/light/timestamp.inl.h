@@ -19,7 +19,7 @@ inline Timestamp::Timestamp(const struct timeval& t)
 
 inline Timestamp Timestamp::Now() {
 
-    return Timestamp(boost::chrono::duration_cast<std::chrono::nanoseconds>(boost::chrono::system_clock::now().time_since_epoch()).count());
+    return Timestamp(boost::chrono::duration_cast<boost::chrono::nanoseconds>(boost::chrono::system_clock::now().time_since_epoch()).count());
 }
 
 inline void Timestamp::Add(Duration d) {
