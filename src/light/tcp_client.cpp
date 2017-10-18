@@ -58,7 +58,6 @@ namespace light {
 
 	void TcpClient::handleConnectError()
 	{
-		LOG4CPLUS_WARN(light_logger, "connect to failed");
 		TimerEventPtr timer = _loop->runAfter(_connectInterval, boost::bind(&TcpClient::restartInLoop, this));
 
 		{

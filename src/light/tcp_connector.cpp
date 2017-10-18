@@ -89,6 +89,8 @@ namespace light {
 
 			_error_handler();
 
+			stop();
+
 		} else if (what & BEV_EVENT_CONNECTED) {
 			
 			evutil_socket_t sock = bufferevent_getfd(_bufferEvent);
