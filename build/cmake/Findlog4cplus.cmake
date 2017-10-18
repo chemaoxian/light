@@ -1,0 +1,7 @@
+
+# libevent setting
+set(LIBEVENT_INCLUDE_DIR $ENV{LIBEVENT_ROOT}/inlcude)
+set(LIBEVENT_LIB_DIR $ENV{LIBEVENT_ROOT})
+
+#log4cplus setting
+set(LOG4CPLUS_INCLUDE_DIR $ENV{LOG4CPLUS_ROOT}/)
