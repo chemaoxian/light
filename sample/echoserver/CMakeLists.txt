@@ -9,4 +9,3 @@ elseif(UNIX)
 endif()
 
 target_link_libraries(echoserver light)
-target_link_libraries(echoserver ${Boost_LIBRARIES})

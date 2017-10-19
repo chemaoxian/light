@@ -9,5 +9,4 @@ target_link_libraries(echoclient rt pthread)
 endif()
 
 target_link_libraries(echoclient light)
-target_link_libraries(echoclient ${Boost_LIBRARIES})
 

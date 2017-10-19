@@ -25,7 +25,7 @@ if(WIN32)
     find_library(LOG4CPLUS_LIBRARY NAMES log4cplusS.lib PATHS ${Log4cplus_LIBRARIES_PATHS} PATH_SUFFIXES "bin.Release")
   endif()
 elseif(UNIX)
-  find_library(LOG4CPLUS_LIBRARY NAMES log4cplus.a PATHS ${Log4cplus_LIBRARIES_PATHS})
+  find_library(LOG4CPLUS_LIBRARY NAMES liblog4cplus.a PATHS ${Log4cplus_LIBRARIES_PATHS})
 endif()
 
 if (LOG4CPLUS_LIBRARY AND LOG4CPLUS_INCLUDE_DIRS)
