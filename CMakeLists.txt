@@ -5,6 +5,9 @@ project(light)
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "set buid type to debug")
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/build/cmake)
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib) 
+
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
     set(CMAKE_DEBUG_POSTFIX "d")
 endif()
