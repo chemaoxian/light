@@ -5,10 +5,10 @@
 
 namespace light {
 
-template <typename T>
-T max(T x, T y) {
-    return x > y ?  x: y;
-}
+	template <typename T>
+	T tmax(T x, T y) {
+		return x > y ?  x: y;
+	}
 
 EventLoopThreadPool::EventLoopThreadPool(const std::string& name)
 	:_started(false),
@@ -27,7 +27,7 @@ void EventLoopThreadPool::start(uint32_t threadCount) {
 
 	_started = true;
 
-	threadCount = max(threadCount, (uint32_t)1);
+	threadCount = tmax(threadCount, (uint32_t)1);
 	for (size_t i=0; i<threadCount; i++) {
 		boost::shared_ptr<EventLoopThread> threadPtr(new EventLoopThread((boost::format("%s:%d") % _name % (i+1)).str()));
 		threadPtr->start();
