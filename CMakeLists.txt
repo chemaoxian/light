@@ -20,6 +20,7 @@ set(Boost_USE_STATIC_LIBS  ON)         # only find static libs
 set(Boost_USE_STATIC_RUNTIME  OFF)
 
 find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Threads REQUIRED)
 find_package(libevent REQUIRED)
 find_package(log4cplus REQUIRED)
 
