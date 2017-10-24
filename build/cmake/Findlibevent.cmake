@@ -11,7 +11,9 @@ set(LibEvent_EXTRA_PREFIXES /usr/local /opt/local "$ENV{LIBEVENT_ROOT}" ${LIBEVE
 foreach(prefix ${LibEvent_EXTRA_PREFIXES})
   list(APPEND LibEvent_INCLUDE_PATHS "${prefix}/include")
   list(APPEND LibEvent_LIBRARIES_PATHS "${prefix}/lib")
-  list(APPEND LibEvent_LIBRARIES_PATHS "{prefix}")
+  if(WIN32)
+    list(APPEND LibEvent_LIBRARIES_PATHS "${prefix}")
+  endif()
 endforeach()
 
 find_path(LIBEVENT_INCLUDE_DIRS event2 PATHS ${LibEvent_INCLUDE_PATHS})
@@ -21,9 +23,10 @@ if(WIN32)
   find_library(LIBEVENT_LIBRARY_EXTRA NAMES libevent_extras.lib PATHS ${LibEvent_LIBRARIES_PATHS})
 elseif(UNIX)
   find_library(LIBEVENT_LIBRARY_CORE NAMES libevent_core.a PATHS ${LibEvent_LIBRARIES_PATHS})
-  find_library(LIBEVENT_LIBRARY_EXTRA NAMES libevent_extras.a PATHS ${LibEvent_LIBRARIES_PATHS})
+  find_library(LIBEVENT_LIBRARY_EXTRA NAMES libevent_extra.a PATHS ${LibEvent_LIBRARIES_PATHS})
   find_library(LIBEVENT_LIBRARY_PTHREADS NAMES libevent_pthreads.a PATHS ${LibEvent_LIBRARIES_PATHS})
 endif()
+
 
 if (LIBEVENT_LIBRARY_CORE AND LIBEVENT_LIBRARY_EXTRA AND LIBEVENT_INCLUDE_DIRS)
   set(Libevent_FOUND TRUE)
