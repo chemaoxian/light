@@ -1,6 +1,6 @@
 #include <light/tcp_connection.h>
 #include <light/event_loop.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 
 namespace light {
 
@@ -63,7 +63,7 @@ namespace light {
 
 			int ret = bufferevent_enable(_bufferEvent, EV_READ|EV_WRITE);
 			if (ret != 0) {
-				LOG4CPLUS_ERROR(light_logger, "bufferevent_enable for " << _name << " ret " << ret);
+				LOG4CPLUS_ERROR(LIGHT_LOGGER, "bufferevent_enable for " << _name << " ret " << ret);
 				return false;
 			}
 
@@ -77,7 +77,7 @@ namespace light {
 
 	bool TcpConnection::send(void* buffer, int len) {
 		if (getStatus() != kConnected) {
-			LOG4CPLUS_ERROR(light_logger, "send for " << _name << " failed, invalid status " << getStatus());
+			LOG4CPLUS_ERROR(LIGHT_LOGGER, "send for " << _name << " failed, invalid status " << getStatus());
 			return false;
 		} else {
 			return bufferevent_write(_bufferEvent, buffer, len) == 0;
@@ -183,7 +183,7 @@ namespace light {
 			       what & BEV_EVENT_TIMEOUT) {
 			_handleClose(kCloseWithError);
 		} else {
-			LOG4CPLUS_WARN(light_logger, "unhandled event : " << what << " name : " << _name);
+			LOG4CPLUS_WARN(LIGHT_LOGGER, "unhandled event : " << what << " name : " << _name);
 		}
 	}
 

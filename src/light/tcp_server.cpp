@@ -1,5 +1,5 @@
 #include <light/tcp_server.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 #include <light/event_loop.h>
 #include <light/event_loop_thread_pool.h>
 #include <light/tcp_connection.h>

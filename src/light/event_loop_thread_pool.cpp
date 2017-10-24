@@ -1,5 +1,5 @@
 #include <light/event_loop_thread_pool.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 #include <algorithm>
 #include <boost/format.hpp>
 

@@ -3,6 +3,7 @@
 
 #include <light/forward.hpp>
 #include <light/duration.h>
+#include <light/codec.h>
 
 namespace light {
 

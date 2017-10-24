@@ -1,6 +1,6 @@
 #include <light/tcp_listener.h>
 #include <light/event_loop.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 
 namespace light {
 
@@ -30,7 +30,7 @@ bool TcpListener::start(const std::string& listenAddr) {
 	int addrLen = sizeof(sockaddr);
 	int ret = evutil_parse_sockaddr_port(listenAddr.c_str(), &addr, &addrLen);
 	if (ret != 0) {
-		LOG4CPLUS_ERROR(light_logger, "failed to listen addr " << listenAddr
+		LOG4CPLUS_ERROR(LIGHT_LOGGER, "failed to listen addr " << listenAddr
 			<< ", ret = " << ret);
 
 		_started = false;
@@ -70,7 +70,7 @@ void TcpListener::_handleRead(struct evconnlistener * l, evutil_socket_t fd, str
 
 void TcpListener::_handleError(struct evconnlistener *) {
 
-	LOG4CPLUS_ERROR(light_logger, "TcpListener [" << _name <<  "] occur a errror");
+	LOG4CPLUS_ERROR(LIGHT_LOGGER, "TcpListener [" << _name <<  "] occur a errror");
 
 	if (_errorHandler) {
 		_errorHandler();

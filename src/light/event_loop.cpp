@@ -3,7 +3,7 @@
 #include <event2/event.h>
 #include <light/event_loop.h>
 #include <light/exception.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 #include <light/timer_event.h>
 #include <event2/thread.h>
 
@@ -36,11 +36,11 @@ namespace light {
 
 		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");
 
-		LOG4CPLUS_TRACE(light_logger, "EventLoop " << _name << " Loop begin, tid = " << _tid);
+		LOG4CPLUS_TRACE(LIGHT_LOGGER, "EventLoop " << _name << " Loop begin, tid = " << _tid);
 
 		int ret = event_base_loop(_eventBase, 0);
 
-		LOG4CPLUS_TRACE(light_logger, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
+		LOG4CPLUS_TRACE(LIGHT_LOGGER, "EventLoop " << _name << " Loop end, tid = " << _tid << " ret = " << ret);
 	}
 
 	void EventLoop::stop(bool handlePenddingEvent) {

@@ -1,20 +1,11 @@
 #include <iostream>
-#include <light/forward.hpp>
-#include <light/tcp_server.h>
-#include <light/tcp_client.h>
-#include <light/event_loop.h>
 #include <event2/event.h>
-#include <log4cplus/config.hxx>
 #include <event2/thread.h>
 #include <light/tcp_connection.h>
-#include <light/log4cplus_forward.h>
-#ifdef WIN32
-#include <log4cplus/win32consoleappender.h>
-#else
-#include <log4cplus/consoleappender.h>
-#endif
+#include <light/inner_log.h>
 #include <signal.h>
 #include <light/signal_event.hpp>
+#include <light/light.h>
 
 class EchoServer : boost::noncopyable
 {
@@ -43,7 +34,7 @@ public:
 	}
 
     void statics() {
-	    LOG4CPLUS_INFO(light::light_logger, "current count " << _count.load()
+	    LOG4CPLUS_INFO(light::LIGHT_LOGGER, "current count " << _count.load()
 				<< " current bytes : " << curent_size.load() / 1024.0f  / 1024.0f << "M"
 				<< " qps : " << request_count);
 
@@ -89,35 +80,14 @@ int main(int argc, const char* argv[]) {
 		printf("usage : prog host\n");
 		return -1;
 	}
-#ifdef WIN32
+
 	WSADATA data;
-	if (WSAStartup(MAKEWORD(2,2), &data) != 0) {
-		printf("init WAS failed\n");
+	if (WSAStartup(MAKEWORD(2,2), &data) != 0){
+		return -1;
 	}
 
-	log4cplus::initialize();
-
-	log4cplus::SharedAppenderPtr appender(new log4cplus::Win32ConsoleAppender());
-	std::auto_ptr<log4cplus::Layout> layout(new log4cplus::PatternLayout("%D{[%y%m%d %H:%M:%S]} [%l] %-5p %c{2} %%%x%% - %m %n"));
-
-	appender->setLayout(layout);
-	light::light_logger.addAppender(appender);
-
-	evthread_use_windows_threads();
-#else
-	log4cplus::initialize();
-
-	log4cplus::SharedAppenderPtr appender(new log4cplus::ConsoleAppender());
-	std::auto_ptr<log4cplus::Layout> layout(new log4cplus::PatternLayout("%D{[%y%m%d %H:%M:%S]} [%l] %-5p %c{2} %%%x%% - %m %n"));
-
-	appender->setLayout(layout);
-	light::light_logger.addAppender(appender);
-
-    evthread_use_pthreads();
-#endif
-
-	//evthread_enable_lock_debuging();
-	//event_enable_debug_mode();
+	light::initilize("");
+	
 
 	light::EventLoopPtr loop = boost::make_shared<light::EventLoop>("EchoMain");
 

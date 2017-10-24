@@ -1,6 +1,6 @@
 #include <light/tcp_connector.h>
 #include <light/event_loop.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 #include <light/tcp_connection.h>
 
 namespace light {
@@ -105,7 +105,7 @@ namespace light {
 
 			_bufferEvent = NULL;
 		} else {
-			LOG4CPLUS_WARN(light_logger, "unhandled event : " << what << " name : " << _name);
+			LOG4CPLUS_WARN(LIGHT_LOGGER, "unhandled event : " << what << " name : " << _name);
 		}
 
 		stop();

@@ -6,10 +6,9 @@
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
 
-
 namespace light {
 	
-	static log4cplus::Logger light_logger = log4cplus::Logger::getInstance("light");
+	extern log4cplus::Logger LIGHT_LOGGER;
 
 }
 

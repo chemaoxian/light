@@ -65,9 +65,6 @@ typedef boost::function<void()> Handler;
 typedef boost::function<void(TcpConnectionPtr&, const BufferPtr&)> MessageHandler;
 
 typedef boost::function<void(TcpConnectionPtr&)> ConnectionHandler;
-
-typedef boost::function<codec::CodecStatus(evbuffer*, BufferPtr&)> CodecHandler;
-
 }
 
 #endif

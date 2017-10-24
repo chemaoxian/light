@@ -2,6 +2,7 @@
 #define _LIGHT_TCP_CLIENT_H_
 
 #include <light/forward.hpp>
+#include <light/codec.h>
 
 namespace light {
 

@@ -2,11 +2,15 @@
 #define _LIGHT_CODEC_H_
 
 #include <light/forward.hpp>
+#include <light/buffer.h>
 #include <boost/type_traits.hpp>
 
 namespace light {
 	
-namespace codec {
+
+	typedef boost::function<codec::CodecStatus(evbuffer*, BufferPtr&)> CodecHandler;
+
+	namespace codec {
 
 	template <typename HeaderType>
 	class DefaultPacketCodecHandler {
@@ -64,7 +68,7 @@ namespace codec {
 		}
 	};
 
-}
+	}
 }
 
 

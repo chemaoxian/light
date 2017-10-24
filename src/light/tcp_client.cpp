@@ -3,7 +3,7 @@
 #include <light/tcp_connection.h>
 #include <light/event_loop.h>
 #include <light/timer_event.h>
-#include <light/log4cplus_forward.h>
+#include <light/inner_log.h>
 
 namespace light {
 
