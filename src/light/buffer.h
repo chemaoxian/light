@@ -282,7 +282,7 @@ public:
     // UnreadBytes unreads the last n bytes returned
     // by the most recent read operation.
     void UnreadBytes(size_t n) {
-        assert(n < read_index_);
+        assert(n <= read_index_);
         read_index_ -= n;
     }
 
@@ -387,6 +387,10 @@ public:
         const void* eol = memchr(start, '\n', WriteBegin() - start);
         return static_cast<const char*>(eol);
     }
+
+	void rewindRead() {
+		read_index_ = reserved_prepend_size_;
+	}
 private:
 
     char* begin() {

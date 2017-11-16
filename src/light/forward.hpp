@@ -20,6 +20,8 @@
 #include <event2/buffer.h>
 #include <event2/dns.h>
 
+#include <log4cplus/loggingmacros.h>
+
 #include <light/buffer.h>
 #include <light/duration.h>
 

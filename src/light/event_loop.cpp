@@ -32,7 +32,7 @@ namespace light {
 	void EventLoop::run() {
 		_tid = boost::this_thread::get_id();
 	
-		runEvery(Duration(60.0), boost::bind(&EventLoop::_doIdle, this));
+		runEvery(Duration(1.0), boost::bind(&EventLoop::_doIdle, this));
 
 		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");
 

@@ -14,6 +14,7 @@
 #include <light/timer_event.h>
 #include <light/signal_event.hpp>
 #include <light/exception.h>
+#include <light/logger.h>
 
 
 namespace light {

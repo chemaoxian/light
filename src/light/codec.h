@@ -4,6 +4,7 @@
 #include <light/forward.hpp>
 #include <light/buffer.h>
 #include <boost/type_traits.hpp>
+#include <light/inner_log.h>
 
 namespace light {
 	
@@ -11,6 +12,14 @@ namespace light {
 	typedef boost::function<codec::CodecStatus(evbuffer*, BufferPtr&)> CodecHandler;
 
 	namespace codec {
+	
+	inline u_short netToHost(u_short shortInt) {
+		return ntohs(shortInt);
+	}
+
+	inline u_long netToHost(u_long longInt) {
+		return ntohl(longInt);
+	}
 
 	template <typename HeaderType>
 	class DefaultPacketCodecHandler {
@@ -27,10 +36,10 @@ namespace light {
 			}
 
 			HeaderType header_len;
-			ev_ssize_t read_header_len = evbuffer_copyout(inputBuffer, &header_len, sizeof(header_len)) == sizeof(header_len);
+			ev_ssize_t read_header_len = evbuffer_copyout(inputBuffer, (char*)&header_len, sizeof(HeaderType));
 			BOOST_ASSERT(read_header_len == sizeof(header_len));
-
-			u_long host_header_len = ntohl(header_len);
+			
+			HeaderType host_header_len = netToHost(header_len);
 
 			if (input_len < host_header_len)
 			{
@@ -41,6 +50,8 @@ namespace light {
 
 			ev_ssize_t remove_size = evbuffer_remove(inputBuffer, outBuffer->WriteBegin(), host_header_len);
 			BOOST_ASSERT(remove_size == host_header_len);
+
+			outBuffer->WriteBytes(host_header_len);
 
 			return kComplete;
 		}

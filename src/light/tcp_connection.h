@@ -26,9 +26,9 @@ public:
 	};
 
 public:
-	TcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);
+	TcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const sockaddr& peer);
 	
-	TcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const struct sockaddr& peer);
+	TcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const sockaddr& peer);
 
 	~TcpConnection();
 
@@ -65,6 +65,9 @@ public:
 
 	std::string getName() {return _name;}
 
+	std::string getPeerIp();
+
+	uint16_t getPeerPort();
 public: // internal use, NOT thread safe functions, for init the tcp connnection 
 	//NOT thead safe
 	void setMessageHandler(const MessageHandler& handler);
@@ -92,7 +95,7 @@ private:
 private:
 	EventLoopPtr _looper;
 	std::string _name;
-	struct sockaddr _peer;
+	sockaddr _peer;
 	struct bufferevent* _bufferEvent;
 	MessageHandler _msgHandler;
 	ConnectionHandler _connectionHandler;

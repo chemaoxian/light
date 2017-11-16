@@ -1,0 +1,183 @@
+warning: CRLF will be replaced by LF in src/light/event_loop.cpp.
+The file will have its original line endings in your working directory.
+[1mdiff --git a/src/light/buffer.h b/src/light/buffer.h[m
+[1mindex cf9ba68..f293648 100644[m
+[1m--- a/src/light/buffer.h[m
+[1m+++ b/src/light/buffer.h[m
+[36m@@ -282,7 +282,7 @@[m [mpublic:[m
+     // UnreadBytes unreads the last n bytes returned[m
+     // by the most recent read operation.[m
+     void UnreadBytes(size_t n) {[m
+[31m-        assert(n < read_index_);[m
+[32m+[m[32m        assert(n <= read_index_);[m
+         read_index_ -= n;[m
+     }[m
+ [m
+[36m@@ -387,6 +387,10 @@[m [mpublic:[m
+         const void* eol = memchr(start, '\n', WriteBegin() - start);[m
+         return static_cast<const char*>(eol);[m
+     }[m
+[32m+[m
+[32m+[m	[32mvoid rewindRead() {[m
+[32m+[m		[32mread_index_ = reserved_prepend_size_;[m
+[32m+[m	[32m}[m
+ private:[m
+ [m
+     char* begin() {[m
+[1mdiff --git a/src/light/codec.h b/src/light/codec.h[m
+[1mindex dc5df28..450909f 100644[m
+[1m--- a/src/light/codec.h[m
+[1m+++ b/src/light/codec.h[m
+[36m@@ -4,6 +4,7 @@[m
+ #include <light/forward.hpp>[m
+ #include <light/buffer.h>[m
+ #include <boost/type_traits.hpp>[m
+[32m+[m[32m#include <light/inner_log.h>[m
+ [m
+ namespace light {[m
+ 	[m
+[36m@@ -11,6 +12,14 @@[m [mnamespace light {[m
+ 	typedef boost::function<codec::CodecStatus(evbuffer*, BufferPtr&)> CodecHandler;[m
+ [m
+ 	namespace codec {[m
+[32m+[m[41m	[m
+[32m+[m	[32minline u_short netToHost(u_short shortInt) {[m
+[32m+[m		[32mreturn ntohs(shortInt);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32minline u_long netToHost(u_long longInt) {[m
+[32m+[m		[32mreturn ntohl(longInt);[m
+[32m+[m	[32m}[m
+ [m
+ 	template <typename HeaderType>[m
+ 	class DefaultPacketCodecHandler {[m
+[36m@@ -27,10 +36,10 @@[m [mnamespace light {[m
+ 			}[m
+ [m
+ 			HeaderType header_len;[m
+[31m-			ev_ssize_t read_header_len = evbuffer_copyout(inputBuffer, &header_len, sizeof(header_len)) == sizeof(header_len);[m
+[32m+[m			[32mev_ssize_t read_header_len = evbuffer_copyout(inputBuffer, (char*)&header_len, sizeof(HeaderType));[m
+ 			BOOST_ASSERT(read_header_len == sizeof(header_len));[m
+[31m-[m
+[31m-			u_long host_header_len = ntohl(header_len);[m
+[32m+[m[41m			[m
+[32m+[m			[32mHeaderType host_header_len = netToHost(header_len);[m
+ [m
+ 			if (input_len < host_header_len)[m
+ 			{[m
+[36m@@ -42,6 +51,8 @@[m [mnamespace light {[m
+ 			ev_ssize_t remove_size = evbuffer_remove(inputBuffer, outBuffer->WriteBegin(), host_header_len);[m
+ 			BOOST_ASSERT(remove_size == host_header_len);[m
+ [m
+[32m+[m			[32moutBuffer->WriteBytes(host_header_len);[m
+[32m+[m
+ 			return kComplete;[m
+ 		}[m
+ 	};[m
+[1mdiff --git a/src/light/event_loop.cpp b/src/light/event_loop.cpp[m
+[1mindex d26aed4..f55a06b 100644[m
+[1m--- a/src/light/event_loop.cpp[m
+[1m+++ b/src/light/event_loop.cpp[m
+[36m@@ -32,7 +32,7 @@[m [mnamespace light {[m
+ 	void EventLoop::run() {[m
+ 		_tid = boost::this_thread::get_id();[m
+ 	[m
+[31m-		runEvery(Duration(60.0), boost::bind(&EventLoop::_doIdle, this));[m
+[32m+[m		[32mrunEvery(Duration(1.0), boost::bind(&EventLoop::_doIdle, this));[m
+ [m
+ 		BOOST_ASSERT_MSG(_eventBase != NULL, "call event_loop::loop() with NULL event base");[m
+ [m
+[1mdiff --git a/src/light/forward.hpp b/src/light/forward.hpp[m
+[1mindex c4692c2..13ce15f 100644[m
+[1m--- a/src/light/forward.hpp[m
+[1m+++ b/src/light/forward.hpp[m
+[36m@@ -20,6 +20,8 @@[m
+ #include <event2/buffer.h>[m
+ #include <event2/dns.h>[m
+ [m
+[32m+[m[32m#include <log4cplus/loggingmacros.h>[m
+[32m+[m
+ #include <light/buffer.h>[m
+ #include <light/duration.h>[m
+ [m
+[1mdiff --git a/src/light/light.h b/src/light/light.h[m
+[1mindex 43dca31..b32d58d 100644[m
+[1m--- a/src/light/light.h[m
+[1m+++ b/src/light/light.h[m
+[36m@@ -14,6 +14,7 @@[m
+ #include <light/timer_event.h>[m
+ #include <light/signal_event.hpp>[m
+ #include <light/exception.h>[m
+[32m+[m[32m#include <light/logger.h>[m
+ [m
+ [m
+ namespace light {[m
+[1mdiff --git a/src/light/tcp_connection.cpp b/src/light/tcp_connection.cpp[m
+[1mindex ba7bf4a..de6bac9 100644[m
+warning: CRLF will be replaced by LF in src/light/light.h.
+The file will have its original line endings in your working directory.
+[1m--- a/src/light/tcp_connection.cpp[m
+[1m+++ b/src/light/tcp_connection.cpp[m
+[36m@@ -96,7 +96,7 @@[m [mnamespace light {[m
+ 		if (getStatus() != kDisconnected && getStatus() != kConnecting) {[m
+ [m
+ 			_status.store(kDisconnecting);[m
+[31m-			_looper->runInLoop(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));[m
+[32m+[m			[32m_looper->runInQueue(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));[m
+ 		}[m
+ 	}[m
+ [m
+[36m@@ -205,4 +205,16 @@[m [mnamespace light {[m
+ 		connection_ptr->_handleEvent(what);[m
+ 	}[m
+ [m
+[32m+[m	[32mstd::string TcpConnection::getPeerIp()[m
+[32m+[m	[32m{[m
+[32m+[m		[32msockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer);[m[41m [m
+[32m+[m		[32mreturn inet_ntoa(peerAddrIn->sin_addr);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32muint16_t TcpConnection::getPeerPort()[m
+[32m+[m	[32m{[m
+[32m+[m		[32msockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer);[m[41m [m
+[32m+[m		[32mreturn ntohs(peerAddrIn->sin_port);[m
+[32m+[m	[32m}[m
+[32m+[m
+ }[m
+[1mdiff --git a/src/light/tcp_connection.h b/src/light/tcp_connection.h[m
+[1mindex 6f6e8f8..d6f1bac 100644[m
+[1m--- a/src/light/tcp_connection.h[m
+[1m+++ b/src/light/tcp_connection.h[m
+[36m@@ -26,9 +26,9 @@[m [mpublic:[m
+ 	};[m
+ [m
+ public:[m
+[31m-	TcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const struct sockaddr& peer);[m
+[32m+[m	[32mTcpConnection(EventLoopPtr looper, const std::string& name, evutil_socket_t fd,  const sockaddr& peer);[m
+ 	[m
+[31m-	TcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const struct sockaddr& peer);[m
+[32m+[m	[32mTcpConnection(EventLoopPtr looper, const std::string& name, bufferevent* buffer, const sockaddr& peer);[m
+ [m
+ 	~TcpConnection();[m
+ [m
+[36m@@ -65,6 +65,9 @@[m [mpublic:[m
+ [m
+ 	std::string getName() {return _name;}[m
+ [m
+[32m+[m	[32mstd::string getPeerIp();[m
+[32m+[m
+[32m+[m	[32muint16_t getPeerPort();[m
+ public: // internal use, NOT thread safe functions, for init the tcp connnection [m
+ 	//NOT thead safe[m
+ 	void setMessageHandler(const MessageHandler& handler);[m
+[36m@@ -92,7 +95,7 @@[m [mprivate:[m
+ private:[m
+ 	EventLoopPtr _looper;[m
+ 	std::string _name;[m
+[31m-	struct sockaddr _peer;[m
+[32m+[m	[32msockaddr _peer;[m
+ 	struct bufferevent* _bufferEvent;[m
+ 	MessageHandler _msgHandler;[m
+ 	ConnectionHandler _connectionHandler;[m
+warning: CRLF will be replaced by LF in src/light/tcp_connection.h.
+The file will have its original line endings in your working directory.

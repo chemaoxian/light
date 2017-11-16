@@ -96,7 +96,7 @@ namespace light {
 		if (getStatus() != kDisconnected && getStatus() != kConnecting) {
 
 			_status.store(kDisconnecting);
-			_looper->runInLoop(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
+			_looper->runInQueue(boost::bind(&TcpConnection::_handleClose, shared_from_this(), kCloseActive));
 		}
 	}
 
@@ -203,6 +203,18 @@ namespace light {
 	{
 		TcpConnection* connection_ptr = static_cast<TcpConnection*>(ctx);
 		connection_ptr->_handleEvent(what);
+	}
+
+	std::string TcpConnection::getPeerIp()
+	{
+		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer); 
+		return inet_ntoa(peerAddrIn->sin_addr);
+	}
+
+	uint16_t TcpConnection::getPeerPort()
+	{
+		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer); 
+		return ntohs(peerAddrIn->sin_port);
 	}
 
 }
