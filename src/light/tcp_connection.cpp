@@ -152,9 +152,9 @@ namespace light {
 	void TcpConnection::_handleRead() {
 		evbuffer* inputBuffer = bufferevent_get_input(_bufferEvent);
 		if (_msgHandler) {
-			
+
 			TcpConnectionPtr connPtr = shared_from_this();
-			
+
 			while (true) {
 				codec::CodecStatus status = _codec_hander(inputBuffer, _messageBuffer);
 
@@ -207,13 +207,14 @@ namespace light {
 
 	std::string TcpConnection::getPeerIp()
 	{
-		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer); 
-		return inet_ntoa(peerAddrIn->sin_addr);
+		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer);
+        char addrBuf[32] = {0};
+		return evutil_inet_ntop(AF_INET, &(peerAddrIn->sin_addr), addrBuf, sizeof(addrBuf));
 	}
 
 	uint16_t TcpConnection::getPeerPort()
 	{
-		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer); 
+		sockaddr_in* peerAddrIn = reinterpret_cast<sockaddr_in*>(&_peer);
 		return ntohs(peerAddrIn->sin_port);
 	}
 

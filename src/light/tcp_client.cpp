@@ -7,7 +7,7 @@
 
 namespace light {
 
-	TcpClient::TcpClient(EventLoopPtr& loop, const std::string& name /*= ""*/)
+	TcpClient::TcpClient(const EventLoopPtr& loop, const std::string& name /*= ""*/)
 		:_runing(false),
 		 _loop(loop),
 		 _autoConnector(false),

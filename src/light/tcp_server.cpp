@@ -6,7 +6,7 @@
 
 namespace light {
 
-	TcpServer::TcpServer(EventLoopPtr& loop, const std::string& name)
+	TcpServer::TcpServer(const EventLoopPtr& loop, const std::string& name)
 		:_is_running(false),
 		 _listener(loop, name + ":" + "TcpListener"),
 		 _loop(loop),

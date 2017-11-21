@@ -103,10 +103,12 @@ int main(int argc, const char* argv[]) {
 		return -1;
 	}
 
+#ifdef WIN32
 	WSADATA data;
 	if (WSAStartup(MAKEWORD(2,2), &data) != 0){
 		return -1;
 	}
+#endif
 
 	light::initilize("");
 

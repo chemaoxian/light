@@ -10,7 +10,7 @@ namespace light {
 
 	class TcpClient : public boost::enable_shared_from_this<TcpClient> {
 	public:
-		TcpClient(EventLoopPtr& loop, const std::string& name = "");
+		TcpClient(const EventLoopPtr& loop, const std::string& name = "");
 
 		~TcpClient();
 

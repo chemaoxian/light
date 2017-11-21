@@ -11,8 +11,8 @@ namespace light {
 
 class TcpServer : public boost::noncopyable {
 public:
-    TcpServer(EventLoopPtr& loop, const std::string& name = "");
-    
+    TcpServer(const EventLoopPtr& loop, const std::string& name = "");
+
 	~TcpServer();
 
 	void setCodecHandler(const CodecHandler& handler) {_codecHandler = handler;}
@@ -32,7 +32,7 @@ public:
 
 private:
 	typedef boost::unordered_map<std::string, TcpConnectionPtr> ConnectionMap;
-	
+
 private:
 	void _new_connection_handler(evutil_socket_t , struct sockaddr* , int socklen);
 	void _close_connection_handler(TcpConnectionPtr& conn);
