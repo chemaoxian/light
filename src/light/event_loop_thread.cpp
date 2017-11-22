@@ -46,6 +46,8 @@ void EventLoopThread::_stop()
 			}
 		}
 		
+		_started = false;
+
 		boost::thread::id tid = _loop->get_id();
 
 		_loop->stop(true);
